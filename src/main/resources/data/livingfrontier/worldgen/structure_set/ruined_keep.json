@@ -1,0 +1,18 @@
+{
+  "structures": [
+    {
+      "structure": "livingfrontier:ruined_keep",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 52,
+    "separation": 17,
+    "salt": 7389239,
+    "exclusion_zone": {
+      "other_set": "minecraft:villages",
+      "chunk_count": 8
+    }
+  }
+}

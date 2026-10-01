@@ -1,0 +1,87 @@
+plugins {
+    id 'net.minecraftforge.gradle' version '6.0.54'
+}
+
+version = mod_version
+group = mod_group_id
+base.archivesName = 'living-frontier-1.20.1-forge'
+
+if (providers.gradleProperty('frontierBuildDir').isPresent()) {
+    layout.buildDirectory = file(providers.gradleProperty('frontierBuildDir').get())
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.withSourcesJar()
+
+sourceSets {
+    gametest {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+configurations.gametestImplementation.extendsFrom configurations.implementation
+configurations.gametestRuntimeOnly.extendsFrom configurations.runtimeOnly
+
+minecraft {
+    mappings channel: 'official', version: minecraft_version
+    runs {
+        configureEach {
+            workingDirectory layout.buildDirectory.dir("run/${name}").get().asFile
+            property 'forge.logging.console.level', 'info'
+            mods {
+                livingfrontier {
+                    source sourceSets.main
+                }
+            }
+        }
+        client {}
+        server {
+            args '--nogui'
+        }
+        gameTestServer {
+            property 'forge.enabledGameTestNamespaces', 'livingfrontier'
+            mods {
+                livingfrontier {
+                    source sourceSets.gametest
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    inputs.property 'version', project.version
+    filesMatching('META-INF/mods.toml') {
+        expand version: project.version
+    }
+}
+
+tasks.named('jar', Jar).configure {
+    from('LICENSE')
+    manifest.attributes('Implementation-Title': 'Living Frontier',
+            'Implementation-Version': project.version)
+    finalizedBy 'reobfJar'
+}
+
+tasks.matching { it.name == 'runGameTestServer' }.configureEach {
+    dependsOn tasks.named('gametestClasses')
+}
+
+tasks.register('checkClientModels', JavaExec) {
+    dependsOn tasks.named('gametestClasses')
+    classpath = sourceSets.gametest.runtimeClasspath
+    mainClass = 'dev.livingfrontier.client.ClientModelCheck'
+}
+
+tasks.named('check').configure {
+    dependsOn tasks.named('checkClientModels')
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 17
+}

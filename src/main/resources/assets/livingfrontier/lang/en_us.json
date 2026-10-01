@@ -1,0 +1,12 @@
+{
+  "entity.livingfrontier.deer": "Deer",
+  "item.livingfrontier.deer_spawn_egg": "Deer Spawn Egg",
+  "entity.livingfrontier.songbird": "Songbird",
+  "item.livingfrontier.songbird_spawn_egg": "Songbird Spawn Egg",
+  "entity.livingfrontier.firefly": "Firefly",
+  "item.livingfrontier.firefly_spawn_egg": "Firefly Spawn Egg",
+  "entity.livingfrontier.raider": "Frontier Raider",
+  "item.livingfrontier.raider_spawn_egg": "Frontier Raider Spawn Egg",
+  "entity.livingfrontier.warlord": "Frontier Warlord",
+  "item.livingfrontier.warlord_spawn_egg": "Frontier Warlord Spawn Egg"
+}

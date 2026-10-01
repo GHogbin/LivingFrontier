@@ -1,0 +1,28 @@
+name: Build Forge beta
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+      - name: Build and exercise Forge gameplay
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon --console=plain build runGameTestServer
+      - uses: actions/upload-artifact@v4
+        with:
+          name: living-frontier-forge
+          path: build/libs/living-frontier-1.20.1-forge-*.jar

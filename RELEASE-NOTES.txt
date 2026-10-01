@@ -1,0 +1,22 @@
+Living Frontier 0.2.0-beta.1 - First Forge Beta
+
+Requires Minecraft Java 1.20.1, Forge 47.4.0 and Java 17.
+No Fabric API or other mod dependencies.
+
+Adds deer, songbirds, fireflies, roaming raider bands, guarded raider camps,
+ruined keeps and the Frontier Warlord boss. Includes original animated
+models/textures, spawn eggs, configurable natural spawn weights and loot.
+
+The guarded bases use valid generated structure roots and can be found
+with /locate in newly generated normal Overworld terrain.
+
+Install the mod JAR in the active Forge instance's mods folder and restart.
+For multiplayer, install the same build on both server and clients.
+Use a separate test world and back up saves. Do not downgrade newer saves.
+
+Beta limitations: hands-on client, multiplayer and survival-balance
+playtesting is still needed. Firefly glow is visual only; vanilla sounds
+are reused. Guards/bosses do not respawn after defeat or Peaceful removal.
+
+Assets: installable Forge JAR and full editable source ZIP.
+Read START-HERE.txt in the source archive for instructions and commands.

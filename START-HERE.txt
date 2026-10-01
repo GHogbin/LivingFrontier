@@ -1,0 +1,128 @@
+LIVING FRONTIER - FIRST FORGE BETA
+Version 0.2.0-beta.1
+Minecraft Java 1.20.1 / Forge 47.4.0 / Java 17
+
+INSTALL
+1. Install Forge 47.4.0 for Minecraft 1.20.1:
+   https://files.minecraftforge.net/net/minecraftforge/forge/index_1.20.1.html
+2. Create or select a separate Minecraft 1.20.1 / Forge 47.4.0 instance.
+3. Copy living-frontier-1.20.1-forge-0.2.0-beta.1.jar into THAT instance's
+   mods folder. Fully close and restart Minecraft using that Forge profile.
+4. Open the main-menu Mods screen and look for Living Frontier.
+5. Start a new normal Overworld test world, with cheats enabled.
+
+No Fabric API, Fabric Loader, GeckoLib or other content mod is required.
+This JAR is NOT compatible with Fabric, NeoForge, Bedrock or Minecraft 26.3.
+On a multiplayer server, install this same JAR on both server and clients.
+Use Java 17. Your launcher may manage the required game runtime for you.
+Source ZIPs and sources JARs are not installable mods.
+
+The old Living Frontier 26.3 Fabric JAR is a DIFFERENT build. Do not place
+it into this Forge instance. Do not try to downgrade a 26.3 world to 1.20.1.
+Always back up saves before adding or removing mods. In an existing
+1.20.1 world, the new bases appear only in newly generated chunks.
+This project does not change your installed Minecraft profiles.
+
+WHAT IS INCLUDED
+- Deer: herds in forests, taiga, plains and meadows. They flee raiders and
+  non-sneaking survival players. Wheat and sweet berries attract/breed them.
+- Songbirds: small flying/perching birds in forests and grassy biomes,
+  breeding with wheat seeds or melon seeds.
+- Fireflies: small hovering groups in swamps and selected forests at
+  night. They glow visually; they do not illuminate surrounding blocks.
+- Frontier Raiders: uncommon surface-spawning bands of 3-5. Band members
+  follow a nearby leader and cooperate in combat. They do not burn in
+  sunlight, break blocks or target villagers.
+- Raider camps: palisades, tents, campfire, supplies, loot chests and four
+  guards. Random placement grid spacing: 28 chunks.
+- Ruined keeps: stone ruins, towers, courtyard, treasure, six guards and
+  one Frontier Warlord. Random placement grid spacing: 52 chunks.
+- Frontier Warlord: 160 health, heavy melee attacks and a ground slam.
+  Raised weapon, metallic sound and particles give a 1.5-second warning.
+  Retreat beyond four blocks. Below half health, slams happen more often.
+  Drops include diamonds, emeralds, golden apples and a sentry trim.
+
+The generated guards/boss have a home, persist across saves and do not
+automatically respawn after defeat. Roaming raiders use normal hostile
+despawning and mob caps. Peaceful difficulty removes hostile inhabitants;
+switching back will not recreate them in existing bases.
+Structure spacing is a placement grid, not a guaranteed distance between
+bases. Candidate placements near villages are excluded.
+
+CHECK IN-GAME
+Find Living Frontier in the Forge Mods menu and its five spawn eggs in
+the Creative Spawn Eggs tab.
+
+  /summon livingfrontier:deer ~ ~ ~
+  /summon livingfrontier:songbird ~ ~ ~
+  /summon livingfrontier:firefly ~ ~ ~
+  /summon livingfrontier:raider ~ ~ ~
+  /summon livingfrontier:warlord ~ ~ ~
+
+In a normal Overworld world with Generate Structures enabled:
+  /locate structure livingfrontier:raider_camp
+  /locate structure livingfrontier:ruined_keep
+
+These commands can deliberately generate a base in a throwaway world:
+  /place structure livingfrontier:raider_camp
+  /place structure livingfrontier:ruined_keep
+WARNING: /place writes blocks, can overwrite terrain/buildings and creates
+new inhabitants on every invocation. Do not use near anything valuable.
+
+If a command is unknown, check cheats/permissions and the Forge Mods menu.
+If a structure cannot be found, check Overworld, normal world generation,
+Generate Structures and whether you are searching already generated land.
+
+CONFIG
+Forge creates config/livingfrontier-common.toml on first launch.
+Natural spawning weights in its spawning section default to:
+  deerWeight = 8
+  songbirdWeight = 10
+  fireflyWeight = 12
+  raiderWeight = 4
+Each accepts 0..100. Zero disables natural spawning of that species.
+Weights are relative chances, not mobs per minute. Restart after edits.
+Disabling raider natural spawns does not remove base inhabitants.
+
+BETA LIMITATIONS
+This is the first Forge beta, not a finished public-release balance pass.
+Original models/textures are included; vanilla sound events are reused.
+Firefly glow is visual only. Site shapes currently have one variant each.
+The source includes Forge GameTests for entity registration, biome spawns,
+generated roots, normal-world candidates, inhabited templates and boss
+persistence/loot. Hands-on client rendering and multiplayer/balance
+playtesting are still required. Back up worlds and report issues with the
+Minecraft version, Forge version, mod version and relevant latest.log lines.
+Do not include access tokens, personal paths or unrelated log details.
+
+SOURCE AND BUILD
+Main Java: src/main/java/dev/livingfrontier
+Client models/renderers: src/main/java/dev/livingfrontier/client
+World generation and assets: src/main/resources
+Integration tests: src/gametest
+
+Requires a Java 17 JDK. On Windows, set JAVA_HOME and run:
+  .\Build.ps1
+The script builds outside OneDrive's synchronized output folders, runs
+Forge GameTests and copies the reobfuscated installable JAR into dist.
+A project-local .tools JDK, when present, is used instead of JAVA_HOME.
+No local JDK, Gradle caches or Minecraft binaries are in the source ZIP.
+
+Standard Gradle:
+  .\gradlew.bat build
+  .\gradlew.bat runGameTestServer
+  .\gradlew.bat runClient
+On Linux/macOS use ./gradlew instead. The Gradle wrapper downloads its own
+Gradle distribution. ForgeGradle prepares the Minecraft dependencies.
+Development game instances are separate from your installed launcher.
+
+Deterministic asset generators (Node.js, no npm dependencies):
+  node tools/generate-world.mjs
+  node tools/generate-textures.mjs
+Generated resources are checked in, so Node is not needed to build/play.
+Change the generator when editing assets that it regenerates.
+
+Pinned build: Minecraft 1.20.1, Forge 47.4.0, ForgeGradle 6.0.54,
+Gradle 8.8 and Java 17. Original mod code/assets are MIT licensed.
+The upstream Forge MDK notices are preserved in LICENSE.txt and CREDITS.txt.
+Minecraft, Forge and the Gradle wrapper retain their own licenses/terms.

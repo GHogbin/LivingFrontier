@@ -1,0 +1,5 @@
+{
+  "type": "livingfrontier:wildlife_spawns",
+  "biomes": "#livingfrontier:firefly_habitat",
+  "mob": "firefly"
+}
