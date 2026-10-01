@@ -21,6 +21,6 @@ public final class LivingFrontier {
         bus.addListener(FrontierEntities::registerSpawnPlacements);
         bus.addListener(FrontierItems::creativeTabs);
         context.registerConfig(ModConfig.Type.COMMON, FrontierConfig.SPEC);
-        LOGGER.info("Living Frontier Forge beta: wildlife, roaming raiders and guarded wilderness bases");
+        LOGGER.info("Living Frontier Forge beta: wildlife, prowlers, flying wraiths and wilderness encounters");
     }
 }

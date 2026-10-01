@@ -1,22 +1,25 @@
-Living Frontier 0.2.0-beta.1 - First Forge Beta
+Living Frontier 0.2.0-beta.2 - Exploration Beta
 
 Requires Minecraft Java 1.20.1, Forge 47.4.0 and Java 17.
-No Fabric API or other mod dependencies.
+No additional mod dependencies.
 
-Adds deer, songbirds, fireflies, roaming raider bands, guarded raider camps,
-ruined keeps and the Frontier Warlord boss. Includes original animated
-models/textures, spawn eggs, configurable natural spawn weights and loot.
+Adds roaming wild boars, hostile forest prowler packs and flying sky
+wraiths with telegraphed diving attacks. Includes original animated
+models/textures, new spawn eggs, biome spawning and loot.
 
-The guarded bases use valid generated structure roots and can be found
-with /locate in newly generated normal Overworld terrain.
+Adds occasional hostile exploration encounters: daylight raider bands
+and nighttime prowler/wraith groups, with warnings, saved 6-12 minute
+cooldowns, movement requirements and configurable local/global caps.
+Protects Creative/Spectator players, villages, guarded bases, lit ground
+and unsuitable spawning locations. No forced chunk generation.
 
-Install the mod JAR in the active Forge instance's mods folder and restart.
-For multiplayer, install the same build on both server and clients.
-Use a separate test world and back up saves. Do not downgrade newer saves.
+Keeps all Beta 1 wildlife, guarded camps, ruined keeps and the Warlord.
+Corrects daylight raider spawning and permits forest-canopy patrols.
 
-Beta limitations: hands-on client, multiplayer and survival-balance
-playtesting is still needed. Firefly glow is visual only; vanilla sounds
-are reused. Guards/bosses do not respawn after defeat or Peaceful removal.
+Replace the Beta 1 JAR with this JAR and restart the Forge instance.
+Do not install both versions. Back up worlds before upgrading.
+Eight spawn eggs are available; new mobs can spawn in existing 1.20.1 saves.
 
-Assets: installable Forge JAR and full editable source ZIP.
-Read START-HERE.txt in the source archive for instructions and commands.
+Beta limitations: hands-on client, multiplayer and balance playtesting
+remains necessary. Glowing mobs do not provide dynamic world lighting.
+Read START-HERE.txt for configuration, commands and installation details.

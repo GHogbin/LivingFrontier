@@ -1,0 +1,5 @@
+{
+  "type": "livingfrontier:wildlife_spawns",
+  "biomes": "#livingfrontier:prowler_habitat",
+  "mob": "prowler"
+}

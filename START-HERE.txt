@@ -1,12 +1,12 @@
-LIVING FRONTIER - FIRST FORGE BETA
-Version 0.2.0-beta.1
+LIVING FRONTIER - EXPLORATION FORGE BETA
+Version 0.2.0-beta.2
 Minecraft Java 1.20.1 / Forge 47.4.0 / Java 17
 
 INSTALL
 1. Install Forge 47.4.0 for Minecraft 1.20.1:
    https://files.minecraftforge.net/net/minecraftforge/forge/index_1.20.1.html
 2. Create or select a separate Minecraft 1.20.1 / Forge 47.4.0 instance.
-3. Copy living-frontier-1.20.1-forge-0.2.0-beta.1.jar into THAT instance's
+3. Copy living-frontier-1.20.1-forge-0.2.0-beta.2.jar into THAT instance's
    mods folder. Fully close and restart Minecraft using that Forge profile.
 4. Open the main-menu Mods screen and look for Living Frontier.
 5. Start a new normal Overworld test world, with cheats enabled.
@@ -22,6 +22,9 @@ it into this Forge instance. Do not try to downgrade a 26.3 world to 1.20.1.
 Always back up saves before adding or removing mods. In an existing
 1.20.1 world, the new bases appear only in newly generated chunks.
 This project does not change your installed Minecraft profiles.
+When upgrading from Beta 1, remove its JAR before copying Beta 2.
+Do not keep both versions installed. New mobs/encounters work in existing
+1.20.1 saves; back up the save first. Structures still require new chunks.
 
 WHAT IS INCLUDED
 - Deer: herds in forests, taiga, plains and meadows. They flee raiders and
@@ -30,6 +33,13 @@ WHAT IS INCLUDED
   breeding with wheat seeds or melon seeds.
 - Fireflies: small hovering groups in swamps and selected forests at
   night. They glow visually; they do not illuminate surrounding blocks.
+- Wild Boars: neutral roaming herds, retaliating together if attacked.
+  Breed with carrots, potatoes or beetroot. Health: 24 (12 hearts).
+- Forest Prowlers: fast hostile night packs in forests/taiga. They hunt
+  players and deer and roam together. Health: 20 (10 hearts).
+- Sky Wraiths: flying night hostiles circling before a warning flap and
+  diving attack, with recovery between swoops. Health: 18 (9 hearts).
+  Their glow is visual only, not dynamic lighting.
 - Frontier Raiders: uncommon surface-spawning bands of 3-5. Band members
   follow a nearby leader and cooperate in combat. They do not burn in
   sunlight, break blocks or target villagers.
@@ -49,8 +59,28 @@ switching back will not recreate them in existing bases.
 Structure spacing is a placement grid, not a guaranteed distance between
 bases. Candidate placements near villages are excluded.
 
+RANDOM EXPLORATION ENCOUNTERS
+While exploring the Overworld, occasional raider bands, prowler packs
+or flying wraith groups may appear at a distance. Prowlers and wraiths
+are nighttime encounters. A short action-bar message warns you.
+Default cooldown is 6-12 in-game minutes per player, including the first
+encounter; moving at least 32 blocks from the saved starting/last-attempt
+position is required. Checks happen every 30 seconds. The cooldown is
+saved with the world and is not reset by reconnecting/restarting.
+These are bounded extra encounters, separate from ordinary natural
+spawning. Defaults: at most six nearby roaming Frontier hostiles within
+96 blocks and 24 living encounter mobs loaded in the Overworld.
+The ordinary loaded-monster cap is also respected.
+No extra encounters for Creative/Spectator/FakePlayers, Peaceful, disabled
+mob spawning, underwater/underground/roofed players, lit positions,
+near villages or within 96 blocks of generated guards.
+Forest leaf canopies are treated as outdoors. New mobs spawn at least
+24 blocks from players, only in loaded chunks, never inside solid blocks.
+Turning an encounter species' spawn weight to zero also excludes that
+species from extra encounters. Existing mobs/bases are not removed.
+
 CHECK IN-GAME
-Find Living Frontier in the Forge Mods menu and its five spawn eggs in
+Find Living Frontier in the Forge Mods menu and its eight spawn eggs in
 the Creative Spawn Eggs tab.
 
   /summon livingfrontier:deer ~ ~ ~
@@ -58,6 +88,9 @@ the Creative Spawn Eggs tab.
   /summon livingfrontier:firefly ~ ~ ~
   /summon livingfrontier:raider ~ ~ ~
   /summon livingfrontier:warlord ~ ~ ~
+  /summon livingfrontier:boar ~ ~ ~
+  /summon livingfrontier:prowler ~ ~ ~
+  /summon livingfrontier:sky_wraith ~ ~ ~
 
 In a normal Overworld world with Generate Structures enabled:
   /locate structure livingfrontier:raider_camp
@@ -80,17 +113,31 @@ Natural spawning weights in its spawning section default to:
   songbirdWeight = 10
   fireflyWeight = 12
   raiderWeight = 4
+  boarWeight = 6
+  prowlerWeight = 5
+  skyWraithWeight = 3
 Each accepts 0..100. Zero disables natural spawning of that species.
 Weights are relative chances, not mobs per minute. Restart after edits.
 Disabling raider natural spawns does not remove base inhabitants.
 
+The encounters section controls extra encounters:
+  enabled = true
+  minMinutes = 6
+  maxMinutes = 12
+  localCap = 6
+  globalCap = 24
+Set enabled=false to keep normal mob spawning without the extra events.
+Restart after edits. A maxMinutes below minMinutes is clamped to minMinutes.
+Changing intervals does not replace already saved cooldown deadlines.
+
 BETA LIMITATIONS
-This is the first Forge beta, not a finished public-release balance pass.
+This is an exploration beta, not a finished public-release balance pass.
 Original models/textures are included; vanilla sound events are reused.
 Firefly glow is visual only. Site shapes currently have one variant each.
 The source includes Forge GameTests for entity registration, biome spawns,
 generated roots, normal-world candidates, inhabited templates and boss
-persistence/loot. Hands-on client rendering and multiplayer/balance
+persistence/loot, encounter cooldowns/caps and actual flying swoop damage.
+Hands-on client rendering and multiplayer/balance
 playtesting are still required. Back up worlds and report issues with the
 Minecraft version, Forge version, mod version and relevant latest.log lines.
 Do not include access tokens, personal paths or unrelated log details.
@@ -115,6 +162,8 @@ Standard Gradle:
 On Linux/macOS use ./gradlew instead. The Gradle wrapper downloads its own
 Gradle distribution. ForgeGradle prepares the Minecraft dependencies.
 Development game instances are separate from your installed launcher.
+runGameTestServer clears only its generated development test world at the
+start of each run, so previous fixture mobs cannot contaminate mob caps.
 
 Deterministic asset generators (Node.js, no npm dependencies):
   node tools/generate-world.mjs

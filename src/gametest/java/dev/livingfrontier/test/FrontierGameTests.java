@@ -57,7 +57,16 @@ public final class FrontierGameTests {
         helper.assertTrue(!bird.causeFallDamage(100, 1, bird.damageSources().fall()), "Bird fall immunity");
         var firefly = helper.spawn(FrontierEntities.FIREFLY.get(), 6, 3, 2);
         helper.assertTrue(firefly.isNoGravity(), "Fireflies hover");
-        for (String name : List.of("deer", "songbird", "firefly", "raider", "warlord")) {
+        var boar = helper.spawn(FrontierEntities.BOAR.get(), 2, 2, 5);
+        helper.assertTrue(boar.getMaxHealth() == 24 && boar.getTarget() == null, "Boars start neutral");
+        helper.assertTrue(boar.isFood(new ItemStack(Items.CARROT))
+                && boar.getBreedOffspring(helper.getLevel(), boar) != null, "Boar breeding");
+        var prowler = helper.spawn(FrontierEntities.PROWLER.get(), 4, 2, 5);
+        helper.assertTrue(prowler.getMaxHealth() == 20, "Prowler health");
+        var wraith = helper.spawn(FrontierEntities.SKY_WRAITH.get(), 6, 4, 5);
+        helper.assertTrue(wraith.getMaxHealth() == 18 && wraith.isNoGravity() && !wraith.isDiving(), "Flying wraith starts idle");
+        helper.assertTrue(!wraith.causeFallDamage(100, 1, wraith.damageSources().fall()), "Wraith fall immunity");
+        for (String name : List.of("deer", "songbird", "firefly", "raider", "warlord", "boar", "prowler", "sky_wraith")) {
             helper.assertTrue(BuiltInRegistries.ITEM.containsKey(FrontierEntities.id(name + "_spawn_egg")), name + " egg");
         }
         helper.succeed();
@@ -80,6 +89,12 @@ public final class FrontierGameTests {
                 "Forge modifier adds raider groups");
         helper.assertTrue(forest.getMobs(MobCategory.MONSTER).unwrap().stream().noneMatch(
                 entry -> entry.type == FrontierEntities.WARLORD.get()), "Boss never spawns naturally");
+        helper.assertTrue(forest.getMobs(MobCategory.CREATURE).unwrap().stream().anyMatch(
+                entry -> entry.type == FrontierEntities.BOAR.get()), "Boar biome spawning");
+        helper.assertTrue(forest.getMobs(MobCategory.MONSTER).unwrap().stream().anyMatch(
+                entry -> entry.type == FrontierEntities.PROWLER.get() && entry.minCount == 2 && entry.maxCount == 3), "Prowler pack spawning");
+        helper.assertTrue(forest.getMobs(MobCategory.MONSTER).unwrap().stream().anyMatch(
+                entry -> entry.type == FrontierEntities.SKY_WRAITH.get()), "Flying hostile biome spawning");
         helper.succeed();
     }
 

@@ -16,6 +16,9 @@ public final class FrontierItems {
     public static final RegistryObject<Item> FIREFLY_EGG = egg("firefly", FrontierEntities.FIREFLY, 0x26382b, 0xd6f36c);
     public static final RegistryObject<Item> RAIDER_EGG = egg("raider", FrontierEntities.RAIDER, 0x343e3b, 0x925942);
     public static final RegistryObject<Item> WARLORD_EGG = egg("warlord", FrontierEntities.WARLORD, 0x292a35, 0xd6ad56);
+    public static final RegistryObject<Item> BOAR_EGG = egg("boar", FrontierEntities.BOAR, 0x624435, 0xdbcba4);
+    public static final RegistryObject<Item> PROWLER_EGG = egg("prowler", FrontierEntities.PROWLER, 0x282c32, 0xe7af43);
+    public static final RegistryObject<Item> SKY_WRAITH_EGG = egg("sky_wraith", FrontierEntities.SKY_WRAITH, 0x34335f, 0x9bdbe6);
 
     private FrontierItems() {
     }

@@ -23,18 +23,26 @@ const pool = (entries, rolls = 1) => ({ rolls, entries });
 tag('deer_habitat', ['#minecraft:is_forest', '#minecraft:is_taiga', 'minecraft:plains', 'minecraft:meadow']);
 tag('songbird_habitat', ['#minecraft:is_forest', '#minecraft:is_taiga', 'minecraft:plains', 'minecraft:meadow']);
 tag('firefly_habitat', ['minecraft:swamp', 'minecraft:mangrove_swamp', 'minecraft:forest', 'minecraft:flower_forest']);
-tag('raider_habitat', ['minecraft:plains', '#minecraft:is_taiga', 'minecraft:forest', 'minecraft:birch_forest']);
+tag('raider_habitat', ['minecraft:plains', '#minecraft:is_taiga', '#minecraft:is_forest']);
+tag('boar_habitat', ['#minecraft:is_forest', '#minecraft:is_taiga', 'minecraft:plains']);
+tag('prowler_habitat', ['#minecraft:is_forest', '#minecraft:is_taiga']);
+tag('sky_wraith_habitat', ['#minecraft:is_forest', '#minecraft:is_taiga', 'minecraft:plains', 'minecraft:meadow']);
 tag('has_structure/raider_camp', ['minecraft:plains', 'minecraft:forest', 'minecraft:birch_forest', '#minecraft:is_taiga']);
 tag('has_structure/ruined_keep', ['minecraft:plains', 'minecraft:meadow', 'minecraft:forest', 'minecraft:birch_forest']);
 
-for (const name of ['deer', 'songbird', 'firefly', 'raider']) {
+for (const name of ['deer', 'songbird', 'firefly', 'raider', 'boar', 'prowler', 'sky_wraith']) {
     data(`forge/biome_modifier/${name}_spawns`, {
         type: `${namespace}:wildlife_spawns`, biomes: `#${namespace}:${name}_habitat`, mob: name
     });
 }
 
-const names = { deer: 'Deer', songbird: 'Songbird', firefly: 'Firefly', raider: 'Frontier Raider', warlord: 'Frontier Warlord' };
-const language = {};
+const names = { deer: 'Deer', songbird: 'Songbird', firefly: 'Firefly', raider: 'Frontier Raider',
+    warlord: 'Frontier Warlord', boar: 'Wild Boar', prowler: 'Forest Prowler', sky_wraith: 'Sky Wraith' };
+const language = {
+    'message.livingfrontier.encounter.raider': 'You hear raiders approaching in the distance...',
+    'message.livingfrontier.encounter.prowler': 'A hunting pack is stalking the forest nearby...',
+    'message.livingfrontier.encounter.sky_wraith': 'Something circles in the sky above...'
+};
 for (const [name, label] of Object.entries(names)) {
     language[`entity.${namespace}.${name}`] = label;
     language[`item.${namespace}.${name}_spawn_egg`] = `${label} Spawn Egg`;
@@ -48,6 +56,9 @@ writeJson(`assets/${namespace}/lang/en_gb.json`, language);
 data('loot_tables/entities/deer', { type: 'minecraft:entity', pools: [pool([item('leather', 0, 2)]), pool([item('beef', 1, 2)])] });
 data('loot_tables/entities/songbird', { type: 'minecraft:entity', pools: [pool([item('feather', 0, 1)])] });
 data('loot_tables/entities/firefly', { type: 'minecraft:entity', pools: [] });
+data('loot_tables/entities/boar', { type: 'minecraft:entity', pools: [pool([item('porkchop', 1, 3)]), pool([item('leather', 0, 1)])] });
+data('loot_tables/entities/prowler', { type: 'minecraft:entity', pools: [pool([item('bone', 1, 2)]), pool([item('leather', 0, 1)])] });
+data('loot_tables/entities/sky_wraith', { type: 'minecraft:entity', pools: [pool([item('phantom_membrane', 0, 1)])] });
 data('loot_tables/entities/raider', {
     type: 'minecraft:entity',
     pools: [pool([item('emerald', 0, 2)]), pool([item('iron_nugget', 1, 5)])]
@@ -280,9 +291,16 @@ keep.mob('warlord', 14, 2, 7, 180);
 for (const [x, z] of [[11, 21], [17, 21], [8, 15], [20, 15], [11, 10], [17, 10]]) keep.mob('raider', x, 1, z, 180);
 keep.save('ruined_keep');
 
-for (const [name, size] of [['empty', [8, 8, 8]], ['arena', [64, 18, 40]]]) {
+for (const [name, size] of [['empty', [8, 8, 8]], ['arena', [64, 18, 40]], ['encounters', [128, 32, 128]]]) {
+    const floor = [];
+    if (name === 'encounters') {
+        for (let x = 0; x < size[0]; x++) for (let z = 0; z < size[2]; z++) {
+            floor.push({ pos: numbers(3, [x, 1, z]), state: int(0) });
+        }
+    }
     const body = { DataVersion: int(3465), size: numbers(3, size),
-        palette: list(10, []), blocks: list(10, []), entities: list(10, []) };
+        palette: list(10, name === 'encounters' ? [{ Name: string('minecraft:grass_block') }] : []),
+        blocks: list(10, floor), entities: list(10, []) };
     const target = path.join(root, 'src', 'gametest', 'resources', 'data', namespace, 'structures', 'test', `${name}.nbt`);
     fs.mkdirSync(path.dirname(target), { recursive: true });
     fs.writeFileSync(target, zlib.gzipSync(Buffer.concat([Buffer.from([10, 0, 0]), payload(10, body)])));

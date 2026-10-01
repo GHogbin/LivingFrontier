@@ -1,6 +1,6 @@
 package dev.livingfrontier.entity;
 
-import java.util.Comparator;
+import dev.livingfrontier.FrontierSpawnRules;
 import java.util.EnumSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -27,6 +27,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
 import javax.annotation.Nullable;
 
@@ -48,7 +49,8 @@ public class RaiderEntity extends Monster {
         goalSelector.addGoal(0, new FloatGoal(this));
         goalSelector.addGoal(1, new ReturnHomeGoal());
         goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.15, false));
-        goalSelector.addGoal(3, new FollowBandGoal());
+        goalSelector.addGoal(3, new FollowPackLeaderGoal<>(this, RaiderEntity.class,
+                raider -> !raider.isGuard() && !(raider instanceof WarlordEntity)));
         goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 0.8));
         goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 10));
         goalSelector.addGoal(6, new RandomLookAroundGoal(this));
@@ -87,9 +89,15 @@ public class RaiderEntity extends Monster {
 
     public static boolean canSpawn(EntityType<RaiderEntity> type, ServerLevelAccessor level, MobSpawnType reason,
             BlockPos pos, RandomSource random) {
-        return level.getDifficulty() != Difficulty.PEACEFUL && level.canSeeSky(pos)
+        return level.getDifficulty() != Difficulty.PEACEFUL && FrontierSpawnRules.isOutdoors(level, pos)
                 && level.getBlockState(pos.below()).is(BlockTags.ANIMALS_SPAWNABLE_ON)
                 && checkMobSpawnRules(type, level, reason, pos, random);
+    }
+
+    @Override
+    public float getWalkTargetValue(BlockPos position, LevelReader level) {
+        // Patrols roam in daylight rather than inheriting monsters' darkness preference.
+        return 0;
     }
 
     @Override
@@ -135,41 +143,4 @@ public class RaiderEntity extends Monster {
         }
     }
 
-    private final class FollowBandGoal extends Goal {
-        private @Nullable RaiderEntity leader;
-
-        private FollowBandGoal() {
-            setFlags(EnumSet.of(Flag.MOVE));
-        }
-
-        @Override
-        public boolean canUse() {
-            if (home != null || getTarget() != null || tickCount % 40 != 0) {
-                return false;
-            }
-            leader = level().getEntitiesOfClass(RaiderEntity.class, getBoundingBox().inflate(16),
-                    raider -> !raider.isGuard() && raider.isAlive() && !(raider instanceof WarlordEntity))
-                    .stream().min(Comparator.comparing(RaiderEntity::getUUID)).orElse(null);
-            return leader != null && leader != RaiderEntity.this && distanceToSqr(leader) > 16;
-        }
-
-        @Override
-        public boolean canContinueToUse() {
-            return leader != null && leader.isAlive() && home == null && getTarget() == null
-                    && distanceToSqr(leader) > 9 && distanceToSqr(leader) < 32 * 32;
-        }
-
-        @Override
-        public void tick() {
-            if (leader != null && tickCount % 10 == 0) {
-                navigation.moveTo(leader, 1.0);
-            }
-        }
-
-        @Override
-        public void stop() {
-            navigation.stop();
-            leader = null;
-        }
-    }
 }

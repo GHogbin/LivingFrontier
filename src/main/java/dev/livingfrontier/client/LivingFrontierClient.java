@@ -14,6 +14,9 @@ public final class LivingFrontierClient {
     static final ModelLayerLocation FIREFLY = layer("firefly");
     static final ModelLayerLocation RAIDER = layer("raider");
     static final ModelLayerLocation WARLORD = layer("warlord");
+    static final ModelLayerLocation BOAR = layer("boar");
+    static final ModelLayerLocation PROWLER = layer("prowler");
+    static final ModelLayerLocation SKY_WRAITH = layer("sky_wraith");
 
     private LivingFrontierClient() {
     }
@@ -29,6 +32,9 @@ public final class LivingFrontierClient {
         event.registerLayerDefinition(FIREFLY, FireflyModel::createBodyLayer);
         event.registerLayerDefinition(RAIDER, () -> RaiderModel.createBodyLayer(false));
         event.registerLayerDefinition(WARLORD, () -> RaiderModel.createBodyLayer(true));
+        event.registerLayerDefinition(BOAR, BoarModel::createBodyLayer);
+        event.registerLayerDefinition(PROWLER, ProwlerModel::createBodyLayer);
+        event.registerLayerDefinition(SKY_WRAITH, SkyWraithModel::createBodyLayer);
     }
 
     @SubscribeEvent
@@ -40,5 +46,8 @@ public final class LivingFrontierClient {
                 context -> new FrontierRenderers.Raider<>(context, false));
         event.registerEntityRenderer(FrontierEntities.WARLORD.get(),
                 context -> new FrontierRenderers.Raider<>(context, true));
+        event.registerEntityRenderer(FrontierEntities.BOAR.get(), FrontierRenderers.Boar::new);
+        event.registerEntityRenderer(FrontierEntities.PROWLER.get(), FrontierRenderers.Prowler::new);
+        event.registerEntityRenderer(FrontierEntities.SKY_WRAITH.get(), FrontierRenderers.SkyWraith::new);
     }
 }

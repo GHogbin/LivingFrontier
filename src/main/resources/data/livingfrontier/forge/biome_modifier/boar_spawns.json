@@ -1,0 +1,5 @@
+{
+  "type": "livingfrontier:wildlife_spawns",
+  "biomes": "#livingfrontier:boar_habitat",
+  "mob": "boar"
+}

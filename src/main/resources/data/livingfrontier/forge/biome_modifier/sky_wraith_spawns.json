@@ -1,0 +1,5 @@
+{
+  "type": "livingfrontier:wildlife_spawns",
+  "biomes": "#livingfrontier:sky_wraith_habitat",
+  "mob": "sky_wraith"
+}

@@ -1,6 +1,9 @@
 package dev.livingfrontier;
 
 import dev.livingfrontier.entity.DeerEntity;
+import dev.livingfrontier.entity.BoarEntity;
+import dev.livingfrontier.entity.ProwlerEntity;
+import dev.livingfrontier.entity.SkyWraithEntity;
 import dev.livingfrontier.entity.FireflyEntity;
 import dev.livingfrontier.entity.RaiderEntity;
 import dev.livingfrontier.entity.SongbirdEntity;
@@ -29,6 +32,12 @@ public final class FrontierEntities {
             register("raider", RaiderEntity::new, MobCategory.MONSTER, 0.6F, 1.95F);
     public static final RegistryObject<EntityType<WarlordEntity>> WARLORD =
             register("warlord", WarlordEntity::new, MobCategory.MONSTER, 0.9F, 2.7F);
+    public static final RegistryObject<EntityType<BoarEntity>> BOAR =
+            register("boar", BoarEntity::new, MobCategory.CREATURE, 0.85F, 0.9F);
+    public static final RegistryObject<EntityType<ProwlerEntity>> PROWLER =
+            register("prowler", ProwlerEntity::new, MobCategory.MONSTER, 0.7F, 0.9F);
+    public static final RegistryObject<EntityType<SkyWraithEntity>> SKY_WRAITH =
+            register("sky_wraith", SkyWraithEntity::new, MobCategory.MONSTER, 0.8F, 0.7F);
 
     private FrontierEntities() {
     }
@@ -49,6 +58,9 @@ public final class FrontierEntities {
         event.put(FIREFLY.get(), FireflyEntity.createAttributes().build());
         event.put(RAIDER.get(), RaiderEntity.createAttributes().build());
         event.put(WARLORD.get(), WarlordEntity.createAttributes().build());
+        event.put(BOAR.get(), BoarEntity.createAttributes().build());
+        event.put(PROWLER.get(), ProwlerEntity.createAttributes().build());
+        event.put(SKY_WRAITH.get(), SkyWraithEntity.createAttributes().build());
     }
 
     public static void registerSpawnPlacements(SpawnPlacementRegisterEvent event) {
@@ -60,5 +72,8 @@ public final class FrontierEntities {
         event.register(RAIDER.get(), SpawnPlacements.Type.ON_GROUND, heightmap, RaiderEntity::canSpawn, operation);
         event.register(WARLORD.get(), SpawnPlacements.Type.ON_GROUND, heightmap,
                 (type, level, reason, pos, random) -> false, operation);
+        event.register(BOAR.get(), SpawnPlacements.Type.ON_GROUND, heightmap, BoarEntity::canSpawn, operation);
+        event.register(PROWLER.get(), SpawnPlacements.Type.ON_GROUND, heightmap, ProwlerEntity::canSpawn, operation);
+        event.register(SKY_WRAITH.get(), SpawnPlacements.Type.NO_RESTRICTIONS, heightmap, SkyWraithEntity::canSpawn, operation);
     }
 }

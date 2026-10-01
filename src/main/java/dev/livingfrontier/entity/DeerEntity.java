@@ -48,6 +48,7 @@ public final class DeerEntity extends Animal {
                 entity -> entity instanceof Player player && !player.isCreative() && !player.isSpectator()
                         && !player.isShiftKeyDown() && !isFood(player.getMainHandItem())));
         goalSelector.addGoal(3, new AvoidEntityGoal<>(this, RaiderEntity.class, 12.0F, 1.4, 1.8));
+        goalSelector.addGoal(3, new AvoidEntityGoal<>(this, ProwlerEntity.class, 12.0F, 1.4, 1.8));
         goalSelector.addGoal(4, new BreedGoal(this, 1.0));
         goalSelector.addGoal(5, new FollowParentGoal(this, 1.1));
         goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.8));

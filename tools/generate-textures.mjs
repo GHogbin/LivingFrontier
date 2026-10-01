@@ -158,6 +158,124 @@ function raider(warlord) {
     return pixels;
 }
 
+// Paint the complete cuboid net, including both caps and every side face.
+function boxPanel(image, u, v, w, h, d, color, style = 'plain') {
+    const tint = amount => color.map(channel => channel + amount);
+    image.panel(u, v, 2 * (w + d), h + d, color, style);
+    image.panel(u + d, v, w, d, tint(12), style);
+    image.panel(u + d + w, v, w, d, tint(-12), style);
+    image.panel(u, v + d, d, h, tint(-5), style);
+    image.panel(u + d + w, v + d, d, h, tint(5), style);
+}
+
+function boar() {
+    const image = atlas(127);
+    const { panel, pixel } = image;
+    boxPanel(image, 0, 0, 10, 8, 16, [108, 73, 48], 'fur');
+    boxPanel(image, 0, 24, 11, 6, 7, [83, 55, 39], 'fur');
+    boxPanel(image, 36, 24, 6, 1, 12, [146, 108, 78], 'fur');
+    boxPanel(image, 64, 0, 8, 7, 6, [116, 78, 51], 'fur');
+    boxPanel(image, 92, 0, 6, 4, 5, [151, 107, 81], 'fur');
+    boxPanel(image, 92, 10, 6, 3, 1, [80, 51, 43]);
+    boxPanel(image, 72, 24, 1, 4, 1, [226, 209, 163], 'bone');
+    boxPanel(image, 80, 24, 3, 3, 1, [100, 63, 44], 'fur');
+    boxPanel(image, 88, 24, 2, 2, 1, [167, 109, 94]);
+    boxPanel(image, 0, 40, 3, 4, 3, [94, 61, 41], 'fur');
+    boxPanel(image, 12, 40, 3, 2, 3, [39, 32, 30]);
+    boxPanel(image, 24, 40, 1, 1, 4, [106, 69, 47], 'fur');
+    boxPanel(image, 34, 40, 1, 2, 2, [47, 38, 32], 'fur');
+    boxPanel(image, 0, 50, 2, 2, 10, [57, 42, 32], 'fur');
+    boxPanel(image, 24, 52, 1, 3, 2, [45, 35, 29], 'fur');
+    panel(108, 12, 4, 3, [28, 22, 19]);
+    panel(112, 12, 4, 3, [228, 166, 78]);
+    // Snout front face and the cloven front/back faces of each hoof.
+    panel(94, 11, 1, 1, [38, 26, 26]);
+    panel(97, 11, 1, 1, [38, 26, 26]);
+    panel(16, 43, 1, 2, [18, 18, 19]);
+    panel(22, 43, 1, 2, [18, 18, 19]);
+    // Short coarse bristle streaks, restricted to the two flank faces.
+    for (const origin of [0, 26]) {
+        for (let x = 2; x < 15; x += 4) {
+            pixel(origin + x, 18, [130, 94, 61]);
+            pixel(origin + x, 19, [88, 59, 41]);
+            pixel(origin + x + 1, 21, [131, 94, 62]);
+        }
+    }
+    return image.pixels;
+}
+
+function prowler() {
+    const image = atlas(149);
+    const { panel, pixel } = image;
+    boxPanel(image, 0, 0, 7, 5, 14, [44, 53, 67], 'fur');
+    boxPanel(image, 0, 20, 8, 6, 6, [34, 41, 54], 'fur');
+    boxPanel(image, 28, 20, 5, 1, 11, [82, 93, 106], 'fur');
+    boxPanel(image, 64, 0, 7, 5, 6, [49, 60, 76], 'fur');
+    boxPanel(image, 90, 0, 4, 2, 4, [86, 94, 108], 'fur');
+    boxPanel(image, 106, 0, 4, 1, 1, [18, 23, 30]);
+    boxPanel(image, 90, 8, 4, 1, 4, [38, 39, 49]);
+    boxPanel(image, 64, 16, 2, 4, 2, [35, 43, 58], 'fur');
+    boxPanel(image, 72, 16, 1, 3, 1, [119, 77, 77]);
+    boxPanel(image, 80, 16, 2, 2, 3, [59, 69, 86], 'fur');
+    boxPanel(image, 90, 16, 1, 1, 3, [21, 27, 36], 'fur');
+    boxPanel(image, 0, 36, 2, 6, 2, [42, 49, 62], 'fur');
+    boxPanel(image, 8, 36, 2, 2, 3, [25, 31, 42], 'fur');
+    boxPanel(image, 24, 36, 1, 2, 1, [236, 223, 188], 'bone');
+    panel(28, 36, 8, 4, [15, 19, 24]);
+    panel(36, 36, 8, 4, [245, 181, 53]);
+    boxPanel(image, 0, 48, 2, 2, 8, [45, 53, 68], 'fur');
+    boxPanel(image, 20, 48, 2, 2, 6, [23, 29, 39], 'fur');
+    boxPanel(image, 40, 48, 2, 3, 4, [29, 36, 48], 'fur');
+    // Broken slate stripes follow both long flank faces of the torso net.
+    for (const origin of [0, 21]) {
+        for (let x = 2; x < 13; x += 4) {
+            panel(origin + x, 14, 2, 2, [27, 35, 48], 'fur');
+            pixel(origin + x + 1, 16, [30, 38, 52]);
+            pixel(origin + x, 18, [66, 76, 92]);
+        }
+    }
+    // Amber side-eye nets retain a narrow, black vertical pupil.
+    panel(36, 37, 1, 1, [15, 19, 24]);
+    panel(38, 37, 1, 1, [15, 19, 24]);
+    return image.pixels;
+}
+
+function skyWraith() {
+    const image = atlas(173);
+    const { panel, pixel } = image;
+    boxPanel(image, 0, 0, 6, 7, 5, [100, 182, 182], 'glow');
+    boxPanel(image, 24, 0, 4, 6, 1, [164, 230, 217], 'glow');
+    boxPanel(image, 40, 0, 5, 5, 5, [91, 163, 177], 'glow');
+    boxPanel(image, 60, 0, 3, 2, 2, [143, 209, 212]);
+    boxPanel(image, 70, 0, 1, 4, 2, [177, 234, 223], 'bone');
+    panel(80, 0, 8, 4, [226, 255, 210]);
+    panel(88, 0, 4, 4, [211, 251, 225]);
+    panel(96, 0, 6, 3, [25, 66, 80]);
+    boxPanel(image, 0, 16, 6, 1, 7, [37, 84, 102], 'veins');
+    boxPanel(image, 28, 16, 7, 1, 5, [43, 102, 118], 'veins');
+    boxPanel(image, 54, 16, 3, 1, 3, [66, 125, 137], 'veins');
+    boxPanel(image, 0, 32, 6, 1, 2, [145, 211, 206], 'bone');
+    boxPanel(image, 16, 32, 7, 1, 1, [157, 224, 214], 'bone');
+    boxPanel(image, 32, 32, 3, 1, 1, [182, 239, 224], 'bone');
+    boxPanel(image, 40, 32, 1, 3, 1, [219, 249, 220], 'bone');
+    boxPanel(image, 44, 32, 1, 4, 1, [87, 149, 163], 'glow');
+    boxPanel(image, 48, 32, 1, 1, 2, [195, 241, 222], 'bone');
+    boxPanel(image, 68, 16, 2, 1, 6, [88, 167, 181], 'veins');
+    boxPanel(image, 88, 16, 1, 2, 3, [157, 225, 212], 'glow');
+    // A small chest rune sits entirely inside the forward-facing 4x6 panel.
+    for (const [x, y] of [[26, 2], [27, 2], [25, 3], [28, 3], [26, 4], [27, 4], [26, 5], [27, 5]]) {
+        pixel(x, y, [48, 125, 140]);
+    }
+    // Pale veins on both cap faces of the thin membranes remain visible in flight.
+    for (const [u, v, w, d] of [[0, 16, 6, 7], [28, 16, 7, 5], [54, 16, 3, 3]]) {
+        for (let y = 0; y < d; y++) {
+            pixel(u + d + Math.min(w - 1, Math.floor(y * w / d)), v + y, [107, 178, 181]);
+            pixel(u + d + w + Math.min(w - 1, Math.floor(y * w / d)), v + y, [76, 149, 162]);
+        }
+    }
+    return image.pixels;
+}
+
 mkdirSync(output, { recursive: true });
 const textures = {
     deer: deer(),
@@ -165,6 +283,9 @@ const textures = {
     firefly: firefly(),
     raider: raider(false),
     warlord: raider(true),
+    boar: boar(),
+    prowler: prowler(),
+    sky_wraith: skyWraith(),
 };
 for (const [name, pixels] of Object.entries(textures)) {
     const path = join(output, `${name}.png`);

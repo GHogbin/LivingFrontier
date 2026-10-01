@@ -9,7 +9,9 @@ public final class ClientModelCheck {
     public static void main(String[] args) {
         Map<String, LayerDefinition> layers = Map.of("deer", DeerModel.createBodyLayer(),
                 "songbird", SongbirdModel.createBodyLayer(), "firefly", FireflyModel.createBodyLayer(),
-                "raider", RaiderModel.createBodyLayer(false), "warlord", RaiderModel.createBodyLayer(true));
+                "raider", RaiderModel.createBodyLayer(false), "warlord", RaiderModel.createBodyLayer(true),
+                "boar", BoarModel.createBodyLayer(), "prowler", ProwlerModel.createBodyLayer(),
+                "sky_wraith", SkyWraithModel.createBodyLayer());
         for (var entry : layers.entrySet()) {
             var root = entry.getValue().bakeRoot();
             CountingVertices vertices = new CountingVertices(entry.getKey());

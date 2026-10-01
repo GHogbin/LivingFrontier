@@ -1,4 +1,7 @@
 {
+  "message.livingfrontier.encounter.raider": "You hear raiders approaching in the distance...",
+  "message.livingfrontier.encounter.prowler": "A hunting pack is stalking the forest nearby...",
+  "message.livingfrontier.encounter.sky_wraith": "Something circles in the sky above...",
   "entity.livingfrontier.deer": "Deer",
   "item.livingfrontier.deer_spawn_egg": "Deer Spawn Egg",
   "entity.livingfrontier.songbird": "Songbird",
@@ -8,5 +11,11 @@
   "entity.livingfrontier.raider": "Frontier Raider",
   "item.livingfrontier.raider_spawn_egg": "Frontier Raider Spawn Egg",
   "entity.livingfrontier.warlord": "Frontier Warlord",
-  "item.livingfrontier.warlord_spawn_egg": "Frontier Warlord Spawn Egg"
+  "item.livingfrontier.warlord_spawn_egg": "Frontier Warlord Spawn Egg",
+  "entity.livingfrontier.boar": "Wild Boar",
+  "item.livingfrontier.boar_spawn_egg": "Wild Boar Spawn Egg",
+  "entity.livingfrontier.prowler": "Forest Prowler",
+  "item.livingfrontier.prowler_spawn_egg": "Forest Prowler Spawn Egg",
+  "entity.livingfrontier.sky_wraith": "Sky Wraith",
+  "item.livingfrontier.sky_wraith_spawn_egg": "Sky Wraith Spawn Egg"
 }

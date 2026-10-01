@@ -69,6 +69,9 @@ tasks.named('jar', Jar).configure {
 
 tasks.matching { it.name == 'runGameTestServer' }.configureEach {
     dependsOn tasks.named('gametestClasses')
+    doFirst {
+        delete layout.buildDirectory.dir('run/gameTestServer/world')
+    }
 }
 
 tasks.register('checkClientModels', JavaExec) {
