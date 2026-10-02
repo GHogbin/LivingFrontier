@@ -12,6 +12,11 @@ if (-not $env:JAVA_HOME -or -not (Test-Path -LiteralPath (Join-Path $env:JAVA_HO
     throw 'Install a Java 17 JDK and set JAVA_HOME before building.'
 }
 $env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
+$versionLine = Select-String -LiteralPath (Join-Path $project 'gradle.properties') -Pattern '^mod_version=(.+)$'
+if (@($versionLine).Count -ne 1) {
+    throw 'Expected exactly one mod_version in gradle.properties.'
+}
+$version = $versionLine.Matches[0].Groups[1].Value.Trim()
 $hasher = [Security.Cryptography.SHA256]::Create()
 try {
     $identity = ([BitConverter]::ToString($hasher.ComputeHash(
@@ -19,8 +24,8 @@ try {
 } finally {
     $hasher.Dispose()
 }
-$build = Join-Path $env:LOCALAPPDATA "LivingFrontierForge\build\$identity"
-$tasks = @('build')
+$build = Join-Path $env:LOCALAPPDATA "LivingFrontierForge\build\$identity\$version"
+$tasks = @('clean', 'build')
 if (-not $SkipGameTests) {
     $tasks += 'runGameTestServer'
 }
@@ -30,11 +35,7 @@ try {
     if ($LASTEXITCODE -ne 0) {
         throw "Gradle failed with exit code $LASTEXITCODE"
     }
-    $versionLine = Select-String -LiteralPath 'gradle.properties' -Pattern '^mod_version=(.+)$'
-    if (@($versionLine).Count -ne 1) {
-        throw 'Expected exactly one mod_version in gradle.properties.'
-    }
-    $artifact = "living-frontier-1.20.1-forge-$($versionLine.Matches[0].Groups[1].Value.Trim()).jar"
+    $artifact = "living-frontier-1.20.1-forge-$version.jar"
     $destination = Join-Path $project 'dist'
     New-Item -ItemType Directory -Path $destination -Force | Out-Null
     Copy-Item -LiteralPath (Join-Path $build "libs\$artifact") -Destination $destination -Force

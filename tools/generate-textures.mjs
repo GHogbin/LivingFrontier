@@ -276,6 +276,86 @@ function skyWraith() {
     return image.pixels;
 }
 
+function villagePerson(guard) {
+    const image = atlas(guard ? 211 : 197);
+    const { panel, pixel } = image;
+    const skin = guard ? [192, 143, 105] : [211, 164, 119];
+    const hair = guard ? [57, 47, 40] : [99, 62, 38];
+    const cloth = guard ? [48, 76, 113] : [51, 116, 122];
+    const leather = guard ? [69, 54, 40] : [113, 73, 43];
+    const metal = [153, 170, 180];
+    const brass = [193, 153, 69];
+    boxPanel(image, 0, 0, 7, 7, 7, skin);
+    boxPanel(image, 28, 0, 7, 5, 1, hair, 'fur');
+    boxPanel(image, 44, 0, 1, 4, 6, hair, 'fur');
+    boxPanel(image, 60, 0, 2, 2, 1, skin);
+    boxPanel(image, 68, 0, 1, 2, 1, skin);
+    boxPanel(image, 80, 0, 8, 2, 8, guard ? metal : [164, 86, 53], guard ? 'metal' : 'cloth');
+    boxPanel(image, 80, 11, 8, 1, 2, guard ? [111, 132, 148] : [124, 66, 44],
+        guard ? 'metal' : 'cloth');
+    boxPanel(image, 112, 0, 6, 2, 1, guard ? [224, 210, 164] : [190, 190, 140], 'cloth');
+    boxPanel(image, 0, 16, 8, 12, 4, cloth, 'cloth');
+    boxPanel(image, 32, 16, 3, 12, 4, cloth, 'cloth');
+    boxPanel(image, 48, 16, 3, 12, 4, guard ? [79, 86, 93] : [103, 90, 62], 'cloth');
+    boxPanel(image, 64, 16, 3, 4, 5, leather, 'wood');
+    boxPanel(image, 82, 16, 3, 3, 4, skin);
+    boxPanel(image, 96, 16, 8, 2, 4, leather, 'wood');
+    boxPanel(image, 120, 16, 2, 2, 1, brass, 'metal');
+    // The 7x7 face is an original skin net, with soft brows and hazel eyes.
+    panel(8, 9, 2, 1, hair);
+    panel(11, 9, 2, 1, hair);
+    panel(8, 10, 2, 1, [236, 226, 199]);
+    panel(11, 10, 2, 1, [236, 226, 199]);
+    pixel(9, 10, guard ? [54, 71, 74] : [79, 85, 49]);
+    pixel(11, 10, guard ? [54, 71, 74] : [79, 85, 49]);
+    panel(9, 12, 3, 1, guard ? [126, 85, 67] : [157, 102, 72]);
+    if (guard) {
+        boxPanel(image, 0, 34, 6, 12, 1, [222, 208, 163], 'cloth');
+        boxPanel(image, 24, 34, 1, 5, 7, metal, 'metal');
+        boxPanel(image, 42, 34, 8, 5, 1, metal, 'metal');
+        boxPanel(image, 62, 34, 4, 3, 5, metal, 'metal');
+        boxPanel(image, 70, 44, 6, 8, 1, cloth, 'wood');
+        boxPanel(image, 70, 54, 4, 2, 1, cloth, 'wood');
+        boxPanel(image, 84, 48, 1, 8, 1, brass, 'metal');
+        boxPanel(image, 70, 58, 6, 1, 1, brass, 'metal');
+        boxPanel(image, 118, 48, 1, 2, 1, brass, 'metal');
+        boxPanel(image, 84, 58, 2, 2, 1, metal, 'metal');
+        boxPanel(image, 94, 34, 2, 1, 11, [200, 217, 223], 'metal');
+        boxPanel(image, 110, 48, 1, 1, 2, [214, 229, 229], 'metal');
+        boxPanel(image, 94, 48, 1, 1, 4, leather, 'wood');
+        boxPanel(image, 94, 56, 5, 1, 1, brass, 'metal');
+        boxPanel(image, 110, 54, 2, 2, 2, brass, 'metal');
+        // Blue hems and a small civic gate badge, repeated on the tabard's back.
+        for (const x of [1, 8]) {
+            panel(x, 35, 6, 1, cloth);
+            panel(x, 45, 6, 2, cloth);
+            panel(x + 1, 39, 1, 4, brass);
+            panel(x + 4, 39, 1, 4, brass);
+            panel(x + 1, 39, 4, 1, brass);
+            panel(x + 2, 40, 2, 3, cloth);
+        }
+        // The shield has its own painted gold diamond, not a vanilla shield skin.
+        for (const [x, y] of [[73, 46], [72, 47], [74, 47], [72, 48], [74, 48], [73, 49]]) {
+            pixel(x, y, brass);
+        }
+    } else {
+        boxPanel(image, 0, 34, 9, 13, 1, [105, 125, 72], 'cloth');
+        boxPanel(image, 24, 34, 6, 8, 4, [140, 96, 55], 'wood');
+        boxPanel(image, 46, 34, 6, 2, 5, [171, 127, 72], 'wood');
+        boxPanel(image, 24, 48, 6, 3, 3, [177, 167, 115], 'cloth');
+        boxPanel(image, 70, 34, 4, 5, 3, [153, 106, 58], 'wood');
+        boxPanel(image, 70, 44, 4, 2, 4, [182, 135, 77], 'wood');
+        boxPanel(image, 88, 34, 1, 12, 1, leather, 'wood');
+        for (const x of [1, 11]) panel(x, 46, 9, 2, [175, 180, 107], 'cloth');
+        // Brass clasps sit on the outward backpack and satchel flap faces.
+        panel(64, 39, 2, 2, brass, 'metal');
+        panel(75, 48, 2, 2, brass, 'metal');
+        panel(83, 48, 2, 2, brass, 'metal');
+        panel(82, 8, 28, 1, [197, 139, 82], 'cloth');
+    }
+    return image.pixels;
+}
+
 mkdirSync(output, { recursive: true });
 const textures = {
     deer: deer(),
@@ -286,6 +366,8 @@ const textures = {
     boar: boar(),
     prowler: prowler(),
     sky_wraith: skyWraith(),
+    traveller: villagePerson(false),
+    village_guard: villagePerson(true),
 };
 for (const [name, pixels] of Object.entries(textures)) {
     const path = join(output, `${name}.png`);

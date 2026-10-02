@@ -22,6 +22,9 @@ final class RaiderModel<T extends RaiderEntity> extends EntityModel<T> {
     private final ModelPart rightArm;
     private final ModelPart leftLeg;
     private final ModelPart rightLeg;
+    private final ModelPart weapon;
+    private final ModelPart bow;
+    private float partialTick;
 
     RaiderModel(ModelPart root) {
         this.root = root;
@@ -31,6 +34,8 @@ final class RaiderModel<T extends RaiderEntity> extends EntityModel<T> {
         rightArm = torso.getChild("right_arm");
         leftLeg = root.getChild("left_leg");
         rightLeg = root.getChild("right_leg");
+        weapon = rightArm.getChild("weapon");
+        bow = rightArm.hasChild("bow") ? rightArm.getChild("bow") : null;
     }
 
     static LayerDefinition createBodyLayer(boolean warlord) {
@@ -85,19 +90,28 @@ final class RaiderModel<T extends RaiderEntity> extends EntityModel<T> {
         }
         torso.getChild("right_arm").addOrReplaceChild("weapon", weapon,
                 PartPose.offsetAndRotation(0, 9, -2.3F, -0.15F, 0, -0.12F));
+        if (!warlord) {
+            BowGeometry.add(torso.getChild("right_arm"), 48, 32, 16, 32);
+        }
         return LayerDefinition.create(mesh, 128, 64);
     }
 
     @Override
     public void prepareMobModel(T entity, float limbSwing, float limbSwingAmount, float partialTick) {
         super.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTick);
+        this.partialTick = partialTick;
         attackTime = entity.getAttackAnim(partialTick);
     }
 
     @Override
     public void setupAnim(T entity, float limbSwing, float limbSwingAmount,
             float ageInTicks, float netHeadYaw, float headPitch) {
-        root.getAllParts().forEach(ModelPart::resetPose);
+        root.getAllParts().forEach(part -> {
+            part.resetPose();
+            part.visible = true;
+        });
+        boolean holdingBow = bow != null && !(entity instanceof WarlordEntity) && entity.isHoldingBow();
+        BowGeometry.setHoldingBow(bow, holdingBow, weapon);
         head.yRot = netHeadYaw * Mth.DEG_TO_RAD;
         head.xRot = headPitch * Mth.DEG_TO_RAD;
         float stride = Mth.cos(limbSwing * 0.6662F) * limbSwingAmount * 1.25F;
@@ -107,10 +121,17 @@ final class RaiderModel<T extends RaiderEntity> extends EntityModel<T> {
         rightArm.xRot = stride * 0.35F - (entity.isAggressive() ? 0.6F : 0.2F);
         leftArm.zRot = 0.07F;
         rightArm.zRot = -0.07F;
-        float swing = Mth.sin(Mth.sqrt(attackTime) * Mth.PI);
-        rightArm.xRot -= swing * 2.0F;
-        rightArm.yRot = -swing * 0.25F;
-        torso.yRot = -swing * 0.12F;
+        if (holdingBow) {
+            boolean drawing = entity.isUsingItem();
+            BowGeometry.pose(rightArm, leftArm, bow, head.yRot, head.xRot,
+                    drawing || entity.isAggressive(),
+                    BowGeometry.drawProgress(drawing, entity.getTicksUsingItem(), partialTick));
+        } else {
+            float swing = Mth.sin(Mth.sqrt(attackTime) * Mth.PI);
+            rightArm.xRot -= swing * 2.0F;
+            rightArm.yRot = -swing * 0.25F;
+            torso.yRot = -swing * 0.12F;
+        }
         if (entity instanceof WarlordEntity warlord && warlord.isCharging()) {
             torso.xRot = 0.13F;
             head.xRot = 0.18F;

@@ -1,12 +1,12 @@
-LIVING FRONTIER - EXPLORATION FORGE BETA
-Version 0.2.0-beta.2
+LIVING FRONTIER - WILDERNESS TRADE NETWORK FORGE BETA
+Version 0.2.0-beta.8
 Minecraft Java 1.20.1 / Forge 47.4.0 / Java 17
 
 INSTALL
 1. Install Forge 47.4.0 for Minecraft 1.20.1:
    https://files.minecraftforge.net/net/minecraftforge/forge/index_1.20.1.html
 2. Create or select a separate Minecraft 1.20.1 / Forge 47.4.0 instance.
-3. Copy living-frontier-1.20.1-forge-0.2.0-beta.2.jar into THAT instance's
+3. Copy living-frontier-1.20.1-forge-0.2.0-beta.8.jar into THAT instance's
    mods folder. Fully close and restart Minecraft using that Forge profile.
 4. Open the main-menu Mods screen and look for Living Frontier.
 5. Start a new normal Overworld test world, with cheats enabled.
@@ -22,7 +22,7 @@ it into this Forge instance. Do not try to downgrade a 26.3 world to 1.20.1.
 Always back up saves before adding or removing mods. In an existing
 1.20.1 world, the new bases appear only in newly generated chunks.
 This project does not change your installed Minecraft profiles.
-When upgrading from Beta 1, remove its JAR before copying Beta 2.
+When upgrading from an earlier beta, remove its JAR before copying Beta 8.
 Do not keep both versions installed. New mobs/encounters work in existing
 1.20.1 saves; back up the save first. Structures still require new chunks.
 
@@ -40,13 +40,42 @@ WHAT IS INCLUDED
 - Sky Wraiths: flying night hostiles circling before a warning flap and
   diving attack, with recovery between swoops. Health: 18 (9 hearts).
   Their glow is visual only, not dynamic lighting.
+- Travellers: peaceful wandering people in forests, taiga, plains, savanna
+  and meadows, alongside existing wildlife. Backpack/cap/cloak models,
+  conversations with local lore, avoidance of nearby hostiles, and a preference
+  for nearby wilderness-road waypoints while roaming.
+  Health: 20 (10 hearts). Roaming travellers can despawn; village visitors
+  have saved homes and remain with their village.
+- Village Guards: neutral melee and bow defenders with 32 health
+  (16 hearts). They patrol near the bell and defend against hostile mobs,
+  excluding creepers, or retaliate when attacked. They do not replace
+  vanilla iron golems or villagers. Shields are visual, not a blocking system.
+- Biome settlements: five fortified village centres combining themed
+  materials, medieval defenses, rustic homes/farms and fantasy landmarks
+  with a market square. Only newly generated normal villages are redesigned.
+  Existing villages and the rare abandoned variants are left intact.
+- Wilderness trade roads: deterministic crossroads send roads in seeded random
+  directions without locating or targeting villages. Roads follow local
+  terrain, use biome-aware surfaces, avoid structures and stop at oceans.
+  Viable road cells include one small camp and one two-house hamlet.
+- Road traders: persistent merchants carry physical cargo between paired
+  camps/hamlets. Right-click opens the vanilla merchant screen. Settlement
+  stock, imports, exports and scarcity pricing persist with the world.
+  Newly discovered inhabited villages join the same economy and send a trader
+  toward the nearest roadside settlement; roads themselves never target them.
 - Frontier Raiders: uncommon surface-spawning bands of 3-5. Band members
   follow a nearby leader and cooperate in combat. They do not burn in
   sunlight, break blocks or target villagers.
-- Raider camps: palisades, tents, campfire, supplies, loot chests and four
-  guards. Random placement grid spacing: 28 chunks.
-- Ruined keeps: stone ruins, towers, courtyard, treasure, six guards and
-  one Frontier Warlord. Random placement grid spacing: 52 chunks.
+- Raider camps: redesigned 31x31 palisade encampments with varied canvas
+  tents, roofed watchtowers, supply sheds, workshop details, paths, banners,
+  a campfire gathering area, seven loot chests and six guards.
+  The two tower guards are archers; the four ground guards are melee.
+  Random placement grid spacing: 28 chunks.
+- Ruined keeps: redesigned 57x57 weathered fortresses with outer towers,
+  entrance foyer, an enclosed roofed maze, guarded rune rooms, dead ends,
+  nine loot chests, nine guards and one sealed Frontier Warlord.
+  Three fortress guards are archers, six are melee.
+  Random placement grid spacing: 52 chunks.
 - Frontier Warlord: 160 health, heavy melee attacks and a ground slam.
   Raised weapon, metallic sound and particles give a 1.5-second warning.
   Retreat beyond four blocks. Below half health, slams happen more often.
@@ -58,6 +87,73 @@ despawning and mob caps. Peaceful difficulty removes hostile inhabitants;
 switching back will not recreate them in existing bases.
 Structure spacing is a placement grid, not a guaranteed distance between
 bases. Candidate placements near villages are excluded.
+
+MIXED RANGED AND MELEE GUARDS
+Archers use bows and actual arrows, with a visible draw before firing.
+They stop to aim at visible targets within 18 blocks and try to retreat
+when opponents approach. Inside four blocks, they switch to modeled
+melee weapons and ordinary melee attacks rather than shooting point-blank.
+Newly added villages alternate melee/archer defenders: the default two
+guards consist of one swordsman and one archer. Newly generated camps
+have two archers/four melee; new keeps have three archers/six melee.
+Raider encounter bands also alternate roles when they have two or more
+members. Naturally spawned raiders/eggs choose archery about one third
+of the time; village guard eggs choose either role.
+Roles are saved and synced to clients. Existing guards without a saved
+role receive a stable UUID-based assignment on first load; no new base
+is required to give old guards access to ranged combat, but their old
+population is not rearranged into the exact new-template ratio.
+Health is unchanged: raiders/base guards 26 points, village guards 32,
+Warlord 160. The Warlord keeps his melee weapon and slam; never a bow.
+
+Village archers hold fire if a friendly creature/villager blocks the
+firing line. Their arrows ignore friendly residents/creatures and
+unintended players. Guards may still retaliate against a player who
+deliberately attacks them. Hostile raider arrows ignore other raiders
+and the Warlord. Arrow safety persists after saving/loading.
+Guard arrows cannot be picked up, and managed bows are not bonus loot.
+Vanilla armor/projectile damage mechanics still apply; no homing arrows
+or block-destroying projectiles are used. Melee weapons/shields are model
+geometry, not equipped gear bonuses or a shield-blocking simulation.
+
+FORTRESS MAZE AND THREE-SEAL PUZZLES
+Enter through the main gate and read the signs. Follow the maze to three
+guarded side rooms: Dawn, River and Root. Each has three rune stones.
+SUN is gold, LEAF is mossy stone, WAVE is blue lapis.
+Right-click the room's stones in the hinted order:
+  Dawn: SUN -> LEAF -> WAVE
+  River: WAVE -> SUN -> LEAF
+  Root: LEAF -> WAVE -> SUN
+These are rune-order puzzles, not item/key consumption puzzles.
+A wrong input resets only that room's unfinished sequence. Completed
+rooms remain saved checkpoints. Players cooperate on the SAME fortress
+progress; all seals and partial sequences survive world saves/restarts.
+Return to the dark seal-controller plinth beside the final portcullis.
+Right-click it for status. Sneak-right-click resets unfinished sequences
+without losing completed rooms. Completing all three seals opens the
+three-wide portcullis and awakens the existing boss; no extra boss spawns.
+Supply chests and room signs offer checkpoints and navigation clues.
+The enclosed shortest entrance-to-boss route is 158 walking steps with
+13 turns, before detours to the side-room puzzles and treasure.
+
+The boss is dormant and cannot take ordinary damage before all seals are
+complete. Digging around walls does not bypass that requirement. Ordinary
+fortress walls remain mineable; rune stones, controller and portcullis
+blocks are unbreakable in Survival. Creative/commands can remove them.
+Standalone Warlords summoned with an egg or /summon are NOT seal-locked.
+Admin /kill remains available for cleanup. Defeated bosses never respawn.
+There is no TNT, lava trap or destructive wrong-answer penalty.
+Creative puzzle blocks are available in Functional Blocks, but placing
+individual stones does not bind a new puzzle: the generated structure's
+block-entity data supplies the room/controller links.
+
+UPGRADING STRUCTURES
+New designs generate only in NEW chunks or new worlds. Existing camps
+and keeps are not overwritten, and their old bosses remain playable.
+In a throwaway test world, /place structure can create the new designs,
+including their guards and seals, but can overwrite nearby buildings.
+Do not remove/downgrade the mod from a save containing its puzzle blocks
+without a backup; older builds do not know these new block types.
 
 RANDOM EXPLORATION ENCOUNTERS
 While exploring the Overworld, occasional raider bands, prowler packs
@@ -79,8 +175,101 @@ Forest leaf canopies are treated as outdoors. New mobs spawn at least
 Turning an encounter species' spawn weight to zero also excludes that
 species from extra encounters. Existing mobs/bases are not removed.
 
+BIOME SETTLEMENT DESIGNS
+Normal newly generated villages start from an original 41x41 market core:
+  Plains: oak/white terracotta cottages and a lantern bell tower.
+  Desert: sandstone courtyard homes and an oasis sun obelisk.
+  Savanna: acacia/orange terracotta homes and an amber wind spire.
+  Taiga: spruce/mossy stone cottages and a forest rune shrine.
+  Snowy: insulated timber homes, covered lit farms and a frost beacon.
+Each combines four wide open road gateways, perimeter walls/palisades,
+two ladder-access watchtowers, two cottages with four beds, two irrigated
+farms, four striped canopy stalls, vanilla job sites, house loot and a bell.
+Landmarks are decorative vanilla-block architecture, not magical machines.
+The defensive wall surrounds the market core, not all outer village houses.
+
+Vanilla roads and their normal outer houses/profession buildings continue
+growing from the gateways. Villagers, golems, cats and desert camels use
+their ordinary vanilla generation pools. Normal trading and iron golem
+behavior are unchanged. Rare abandoned villages retain their original
+centres, processors and relative weights; they are not made into safe towns.
+
+The redesign only changes the five vanilla town-centre generation pools.
+Saved village starts retain their original templates, and existing blocks
+are not replaced. Explore previously ungenerated terrain or a new world.
+Vanilla /locate structure minecraft:village_plains (or village_desert,
+village_savanna, village_taiga, village_snowy) still works, but may locate
+an old village. In a disposable test world, /place structure
+minecraft:village_plains creates a full generated village with the new
+centre unless the rare abandoned variant is selected.
+WARNING: /place writes blocks and can overwrite terrain or buildings.
+Datapacks/mods overriding the same town-centre pools may take priority.
+
+VILLAGE LIFE
+When you approach an inhabited Overworld village, villagers' remembered
+meeting bells are checked every ten seconds. A valid bell with at least
+two adult villagers gains up to two guards, one traveller visitor and one
+road trader when the trade network is enabled,
+only if there are safe loaded-ground positions nearby. Paved squares and
+snowy village ground qualify for residents too.
+Where a flat, completely empty natural-ground plot is available, one
+five-by-five canopy stall is added, with a barrel, composter, fletching
+table and hanging lantern. These are normal vanilla job-site blocks
+that villagers can use. No existing houses/chests/trees are overwritten.
+The stall does not create extra vanilla villagers or replace their brains.
+This small-stall upgrade is separate from the baked-in biome market cores;
+it does not redesign existing villages or change their vanilla houses.
+Dense/hilly villages may gain residents without a stall. Guards/visitors
+are added once; moving the bell nearby or killing them does not create
+replacement residents. Existing player-built villages with a claimed
+bell and villagers can qualify. Turn villageLife.markets=false before
+visiting villages if you want no decorative block placement.
+
+WILDERNESS ROADS AND SETTLEMENT TRADE
+Roads are generated from the world seed in independent road cells. Each viable
+cell has a jittered crossroad and up to four roads extending in random seeded
+directions. They are unrelated to vanilla village locations. New-chunk terrain
+grading creates three-wide paths, biome surfaces and local shallow bridges;
+known structure pieces are protected.
+
+The two best roads in a viable cell gain a camp and a small hamlet. Camps have
+tents, beds, supplies, a campfire and lanterns. Hamlets have two furnished
+houses, a bell, workstations and stores. When a player reaches a completed
+site, its residents are initialized once. Killing them does not respawn them.
+
+Hamlets dispatch persistent road traders to their paired camps. Traders carry
+an eight-slot cargo inventory, pause when the next chunk is unloaded, and
+resume from saved waypoints later. Delivered goods increase local stock;
+traders reload with local surplus goods. Low-stock goods cost more, abundant
+goods cost less, and settlements publish purchase orders for scarce goods.
+Player purchases remove physical cargo; goods sold to a trader join its cargo.
+Right-click a road trader for the normal Minecraft merchant screen.
+Sneak-right-click shows the trader's saved settlement route.
+
+Roads, camps and hamlets appear only in chunks first generated with Beta 8.
+Already generated Beta 7 road chunks are not rewritten. Villages already
+recorded by the older one-time village-life upgrade are not given replacement
+traders automatically.
+
+VILLAGER CONVERSATIONS AND ERRANDS
+Normal right-click still opens vanilla trading.
+Sneak-right-click an adult villager for a profession-specific greeting and
+a supply request. Hold the requested amount and sneak-right-click THAT
+villager again to deliver it. The reward is two emeralds and a modest
+positive vanilla gossip/reputation change. Helping may influence normal
+trade pricing; no guaranteed discount or separate reputation UI is added.
+Farmers: 12 wheat. Librarians: 8 paper. Smiths: 3 iron ingots.
+Fletchers: 16 sticks. Other professions: 4 bread.
+Only one rewarded errand per player per world game-day across ALL villages.
+Requests expire on the next game-day; completing one is saved, so reconnects
+or changing the daylight clock do not bypass the daily reward limit.
+Creative conversation is greeting-only and pays no emeralds.
+Baby villagers, spectators and badly disliked players do not receive jobs.
+Right-click a traveller for short local lore, or a guard for a status line.
+Road traders use Minecraft's standard merchant GUI; no custom screen is added.
+
 CHECK IN-GAME
-Find Living Frontier in the Forge Mods menu and its eight spawn eggs in
+Find Living Frontier in the Forge Mods menu and its eleven spawn eggs in
 the Creative Spawn Eggs tab.
 
   /summon livingfrontier:deer ~ ~ ~
@@ -91,6 +280,9 @@ the Creative Spawn Eggs tab.
   /summon livingfrontier:boar ~ ~ ~
   /summon livingfrontier:prowler ~ ~ ~
   /summon livingfrontier:sky_wraith ~ ~ ~
+  /summon livingfrontier:traveller ~ ~ ~
+  /summon livingfrontier:trader ~ ~ ~
+  /summon livingfrontier:village_guard ~ ~ ~
 
 In a normal Overworld world with Generate Structures enabled:
   /locate structure livingfrontier:raider_camp
@@ -116,6 +308,7 @@ Natural spawning weights in its spawning section default to:
   boarWeight = 6
   prowlerWeight = 5
   skyWraithWeight = 3
+  travellerWeight = 3
 Each accepts 0..100. Zero disables natural spawning of that species.
 Weights are relative chances, not mobs per minute. Restart after edits.
 Disabling raider natural spawns does not remove base inhabitants.
@@ -130,13 +323,53 @@ Set enabled=false to keep normal mob spawning without the extra events.
 Restart after edits. A maxMinutes below minMinutes is clamped to minMinutes.
 Changing intervals does not replace already saved cooldown deadlines.
 
+The villageLife section controls village upgrades and conversations:
+  enabled = true
+  markets = true
+  conversations = true
+  guardsPerVillage = 2
+enabled=false stops automatic village additions, not existing residents.
+markets=false prevents new stalls; existing stalls remain.
+This option only controls automatic small-stall upgrades; the new worldgen
+market designs are part of the village templates, not runtime additions.
+conversations=false disables sneak-click villager errands, not trading.
+guardsPerVillage accepts 0..4 and applies only to newly discovered villages.
+Restart after changing these options. Traveller natural spawning is
+controlled separately by spawning.travellerWeight (zero disables it).
+
+The wildernessRoads section controls new-chunk roads and trade sites:
+  enabled = true
+  regionSize = 384
+  spurLength = 224
+  roadsideSites = true
+  tradeNetwork = true
+regionSize controls approximate crossroad spacing (256..768 blocks).
+spurLength controls random road reach (96..512 blocks).
+roadsideSites=false keeps roads but removes new camps/hamlets.
+tradeNetwork=false keeps generated sites but adds no roadside/village traders.
+These options do not rebuild saved chunks or replace existing populations.
+
 BETA LIMITATIONS
-This is an exploration beta, not a finished public-release balance pass.
+This is a biome-settlement beta, not a finished public-release balance pass.
 Original models/textures are included; vanilla sound events are reused.
-Firefly glow is visual only. Site shapes currently have one variant each.
+Firefly glow is visual only. Camp/fortress designs currently have one variant each.
+Village cores have one original layout per biome; outer houses stay vanilla.
 The source includes Forge GameTests for entity registration, biome spawns,
 generated roots, normal-world candidates, inhabited templates and boss
 persistence/loot, encounter cooldowns/caps and actual flying swoop damage.
+Village coverage includes once-only residents, safe stall placement and
+saved daily rewards/costs/reputation, with ordinary trading preserved.
+Trade-network coverage includes deterministic road/site pairing, continuous
+merchant routes, one-time camp population, saved cargo/stock, transfers,
+scarcity pricing and vanilla merchant offers.
+Puzzle coverage includes maze reachability, wrong-input resets, checkpoints,
+cooperative completion, locked/awakened boss damage and rotated/mirrored
+template bindings. Interactive visual and survival difficulty tuning remain.
+Guard coverage includes saved roles/loadouts, actual ranged hits, close
+melee fallback and no-fire behavior behind villagers, plus bow-model poses.
+Village design coverage includes all five palettes, usable beds/bells/job
+sites/farms/loot, actual native inhabitants, paved/snowy guard placement,
+vanilla street/house expansion and saved vanilla/new template compatibility.
 Hands-on client rendering and multiplayer/balance
 playtesting are still required. Back up worlds and report issues with the
 Minecraft version, Forge version, mod version and relevant latest.log lines.
@@ -168,6 +401,8 @@ start of each run, so previous fixture mobs cannot contaminate mob caps.
 Deterministic asset generators (Node.js, no npm dependencies):
   node tools/generate-world.mjs
   node tools/generate-textures.mjs
+The world generator includes tools/generate-villages.mjs, which can also
+run independently to rebuild/check just the biome village resources.
 Generated resources are checked in, so Node is not needed to build/play.
 Change the generator when editing assets that it regenerates.
 

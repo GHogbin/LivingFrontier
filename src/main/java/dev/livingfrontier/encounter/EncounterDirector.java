@@ -7,6 +7,7 @@ import dev.livingfrontier.LivingFrontier;
 import dev.livingfrontier.entity.ProwlerEntity;
 import dev.livingfrontier.entity.RaiderEntity;
 import dev.livingfrontier.entity.SkyWraithEntity;
+import dev.livingfrontier.entity.VillageGuardEntity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -87,6 +88,8 @@ public final class EncounterDirector {
                 && level.getFluidState(position).isEmpty()
                 && level.getBrightness(LightLayer.BLOCK, position) <= 7 && !level.isCloseToVillage(position, 2)
                 && level.getEntitiesOfClass(RaiderEntity.class, player.getBoundingBox().inflate(96), RaiderEntity::isGuard).isEmpty()
+                && level.getEntitiesOfClass(VillageGuardEntity.class, player.getBoundingBox().inflate(64),
+                        VillageGuardEntity::isVillageResident).isEmpty()
                 && nearbyHostiles(level, player) < FrontierConfig.ENCOUNTER_LOCAL_CAP.get();
     }
 
@@ -146,6 +149,9 @@ public final class EncounterDirector {
             ForgeEventFactory.onFinalizeSpawn(mob, level, level.getCurrentDifficultyAt(pos), MobSpawnType.EVENT, null, null);
             if (mob.isSpawnCancelled()) {
                 continue;
+            }
+            if (mob instanceof RaiderEntity raider) {
+                raider.setArcher(spawned % 2 == 1);
             }
             mob.addTag(ENCOUNTER_TAG);
             mob.setTarget(player);

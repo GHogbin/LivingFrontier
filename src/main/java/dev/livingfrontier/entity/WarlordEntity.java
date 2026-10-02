@@ -5,11 +5,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.BossEvent;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -23,6 +26,7 @@ public final class WarlordEntity extends RaiderEntity {
             Component.translatable("entity.livingfrontier.warlord"), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS);
     private int slamCooldown = 100;
     private int chargeTicks;
+    private boolean frontierSealed;
 
     public WarlordEntity(EntityType<? extends WarlordEntity> type, Level level) {
         super(type, level);
@@ -44,6 +48,36 @@ public final class WarlordEntity extends RaiderEntity {
 
     public boolean isCharging() {
         return entityData.get(CHARGING);
+    }
+
+    public boolean isFrontierSealed() {
+        return frontierSealed;
+    }
+
+    public void awakenFromSeals() {
+        frontierSealed = false;
+        setNoAi(false);
+        playSound(SoundEvents.RAVAGER_ROAR, 1.5F, 0.8F);
+    }
+
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        return (!frontierSealed || source.is(DamageTypes.GENERIC_KILL)) && super.hurt(source, amount);
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        tag.putBoolean("FrontierSealed", frontierSealed);
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        frontierSealed = tag.getBoolean("FrontierSealed");
+        if (frontierSealed) {
+            setNoAi(true);
+        }
     }
 
     @Override

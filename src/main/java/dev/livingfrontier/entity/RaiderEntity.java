@@ -4,6 +4,9 @@ import dev.livingfrontier.FrontierSpawnRules;
 import java.util.EnumSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
@@ -19,7 +22,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
@@ -29,10 +31,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.item.Items;
 import javax.annotation.Nullable;
 
-public class RaiderEntity extends Monster {
+public class RaiderEntity extends Monster implements ArmedGuard {
+    private static final EntityDataAccessor<Boolean> ARCHER =
+            SynchedEntityData.defineId(RaiderEntity.class, EntityDataSerializers.BOOLEAN);
     private @Nullable BlockPos home;
+    private boolean roleAssigned;
 
     public RaiderEntity(EntityType<? extends RaiderEntity> type, Level level) {
         super(type, level);
@@ -48,7 +54,7 @@ public class RaiderEntity extends Monster {
     protected void registerGoals() {
         goalSelector.addGoal(0, new FloatGoal(this));
         goalSelector.addGoal(1, new ReturnHomeGoal());
-        goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.15, false));
+        goalSelector.addGoal(2, new GuardCombatGoal<>(this, 1.15));
         goalSelector.addGoal(3, new FollowPackLeaderGoal<>(this, RaiderEntity.class,
                 raider -> !raider.isGuard() && !(raider instanceof WarlordEntity)));
         goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 0.8));
@@ -62,6 +68,9 @@ public class RaiderEntity extends Monster {
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason,
             @Nullable SpawnGroupData groupData, @Nullable CompoundTag spawnTag) {
         SpawnGroupData result = super.finalizeSpawn(level, difficulty, reason, groupData, spawnTag);
+        if (!roleAssigned) {
+            setArcher(random.nextInt(3) == 0);
+        }
         if (reason == MobSpawnType.STRUCTURE) {
             home = blockPosition();
             setPersistenceRequired();
@@ -74,8 +83,37 @@ public class RaiderEntity extends Monster {
     }
 
     @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        entityData.define(ARCHER, false);
+    }
+
+    @Override
+    public boolean isArcher() {
+        return entityData.get(ARCHER);
+    }
+
+    @Override
+    public void setArcher(boolean archer) {
+        entityData.set(ARCHER, archer && !(this instanceof WarlordEntity));
+        roleAssigned = true;
+        equipForRange(isArcher());
+    }
+
+    @Override
+    public void equipForRange(boolean ranged) {
+        ArmedGuard.equip(this, ranged && isArcher());
+    }
+
+    @Override
+    public boolean isHoldingBow() {
+        return getMainHandItem().is(Items.BOW);
+    }
+
+    @Override
     public void addAdditionalSaveData(CompoundTag output) {
         super.addAdditionalSaveData(output);
+        output.putBoolean("FrontierArcher", isArcher());
         if (home != null) {
             output.putLong("FrontierHome", home.asLong());
         }
@@ -84,6 +122,8 @@ public class RaiderEntity extends Monster {
     @Override
     public void readAdditionalSaveData(CompoundTag input) {
         super.readAdditionalSaveData(input);
+        setArcher(input.contains("FrontierArcher") ? input.getBoolean("FrontierArcher")
+                : (getUUID().getLeastSignificantBits() & 1) == 0);
         home = input.contains("FrontierHome") ? BlockPos.of(input.getLong("FrontierHome")) : null;
     }
 

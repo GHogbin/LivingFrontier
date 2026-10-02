@@ -2,6 +2,7 @@ package dev.livingfrontier.client;
 
 import dev.livingfrontier.FrontierEntities;
 import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.renderer.entity.TippableArrowRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -17,6 +18,9 @@ public final class LivingFrontierClient {
     static final ModelLayerLocation BOAR = layer("boar");
     static final ModelLayerLocation PROWLER = layer("prowler");
     static final ModelLayerLocation SKY_WRAITH = layer("sky_wraith");
+    static final ModelLayerLocation TRAVELLER = layer("traveller");
+    static final ModelLayerLocation TRADER = layer("trader");
+    static final ModelLayerLocation VILLAGE_GUARD = layer("village_guard");
 
     private LivingFrontierClient() {
     }
@@ -35,6 +39,9 @@ public final class LivingFrontierClient {
         event.registerLayerDefinition(BOAR, BoarModel::createBodyLayer);
         event.registerLayerDefinition(PROWLER, ProwlerModel::createBodyLayer);
         event.registerLayerDefinition(SKY_WRAITH, SkyWraithModel::createBodyLayer);
+        event.registerLayerDefinition(TRAVELLER, () -> FrontierPeopleModel.createBodyLayer(false));
+        event.registerLayerDefinition(TRADER, () -> FrontierPeopleModel.createBodyLayer(false));
+        event.registerLayerDefinition(VILLAGE_GUARD, () -> FrontierPeopleModel.createBodyLayer(true));
     }
 
     @SubscribeEvent
@@ -49,5 +56,9 @@ public final class LivingFrontierClient {
         event.registerEntityRenderer(FrontierEntities.BOAR.get(), FrontierRenderers.Boar::new);
         event.registerEntityRenderer(FrontierEntities.PROWLER.get(), FrontierRenderers.Prowler::new);
         event.registerEntityRenderer(FrontierEntities.SKY_WRAITH.get(), FrontierRenderers.SkyWraith::new);
+        event.registerEntityRenderer(FrontierEntities.TRAVELLER.get(), FrontierRenderers.Traveller::new);
+        event.registerEntityRenderer(FrontierEntities.TRADER.get(), FrontierRenderers.Trader::new);
+        event.registerEntityRenderer(FrontierEntities.VILLAGE_GUARD.get(), FrontierRenderers.VillageGuard::new);
+        event.registerEntityRenderer(FrontierEntities.GUARD_ARROW.get(), TippableArrowRenderer::new);
     }
 }

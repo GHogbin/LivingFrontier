@@ -9,6 +9,9 @@ import dev.livingfrontier.entity.ProwlerEntity;
 import dev.livingfrontier.entity.RaiderEntity;
 import dev.livingfrontier.entity.SkyWraithEntity;
 import dev.livingfrontier.entity.SongbirdEntity;
+import dev.livingfrontier.entity.TravellerEntity;
+import dev.livingfrontier.entity.TraderEntity;
+import dev.livingfrontier.entity.VillageGuardEntity;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
@@ -108,6 +111,27 @@ final class FrontierRenderers {
             super(context, new RaiderModel<>(context.bakeLayer(
                     warlord ? LivingFrontierClient.WARLORD : LivingFrontierClient.RAIDER)),
                     warlord ? "warlord" : "raider", 0.4F, warlord ? 1.32F : 1.0F);
+        }
+    }
+
+    static final class Traveller extends FrontierRenderer<TravellerEntity, FrontierPeopleModel<TravellerEntity>> {
+        Traveller(EntityRendererProvider.Context context) {
+            super(context, new FrontierPeopleModel<>(context.bakeLayer(LivingFrontierClient.TRAVELLER), false),
+                    "traveller", 0.35F, 1.0F);
+        }
+    }
+
+    static final class Trader extends FrontierRenderer<TraderEntity, FrontierPeopleModel<TraderEntity>> {
+        Trader(EntityRendererProvider.Context context) {
+            super(context, new FrontierPeopleModel<>(context.bakeLayer(LivingFrontierClient.TRADER), false),
+                    "traveller", 0.35F, 1.0F);
+        }
+    }
+
+    static final class VillageGuard extends FrontierRenderer<VillageGuardEntity, FrontierPeopleModel<VillageGuardEntity>> {
+        VillageGuard(EntityRendererProvider.Context context) {
+            super(context, new FrontierPeopleModel<>(context.bakeLayer(LivingFrontierClient.VILLAGE_GUARD), true),
+                    "village_guard", 0.35F, 1.0F);
         }
     }
 }

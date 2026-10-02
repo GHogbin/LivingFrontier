@@ -4,6 +4,10 @@ import dev.livingfrontier.entity.DeerEntity;
 import dev.livingfrontier.entity.BoarEntity;
 import dev.livingfrontier.entity.ProwlerEntity;
 import dev.livingfrontier.entity.SkyWraithEntity;
+import dev.livingfrontier.entity.TravellerEntity;
+import dev.livingfrontier.entity.TraderEntity;
+import dev.livingfrontier.entity.VillageGuardEntity;
+import dev.livingfrontier.entity.GuardArrowEntity;
 import dev.livingfrontier.entity.FireflyEntity;
 import dev.livingfrontier.entity.RaiderEntity;
 import dev.livingfrontier.entity.SongbirdEntity;
@@ -38,6 +42,14 @@ public final class FrontierEntities {
             register("prowler", ProwlerEntity::new, MobCategory.MONSTER, 0.7F, 0.9F);
     public static final RegistryObject<EntityType<SkyWraithEntity>> SKY_WRAITH =
             register("sky_wraith", SkyWraithEntity::new, MobCategory.MONSTER, 0.8F, 0.7F);
+    public static final RegistryObject<EntityType<TravellerEntity>> TRAVELLER =
+            register("traveller", TravellerEntity::new, MobCategory.CREATURE, 0.6F, 1.95F);
+    public static final RegistryObject<EntityType<TraderEntity>> TRADER =
+            register("trader", TraderEntity::new, MobCategory.CREATURE, 0.6F, 1.95F);
+    public static final RegistryObject<EntityType<VillageGuardEntity>> VILLAGE_GUARD =
+            register("village_guard", VillageGuardEntity::new, MobCategory.CREATURE, 0.6F, 1.95F);
+    public static final RegistryObject<EntityType<GuardArrowEntity>> GUARD_ARROW =
+            register("guard_arrow", GuardArrowEntity::new, MobCategory.MISC, 0.5F, 0.5F);
 
     private FrontierEntities() {
     }
@@ -61,6 +73,9 @@ public final class FrontierEntities {
         event.put(BOAR.get(), BoarEntity.createAttributes().build());
         event.put(PROWLER.get(), ProwlerEntity.createAttributes().build());
         event.put(SKY_WRAITH.get(), SkyWraithEntity.createAttributes().build());
+        event.put(TRAVELLER.get(), TravellerEntity.createAttributes().build());
+        event.put(TRADER.get(), TraderEntity.createAttributes().build());
+        event.put(VILLAGE_GUARD.get(), VillageGuardEntity.createAttributes().build());
     }
 
     public static void registerSpawnPlacements(SpawnPlacementRegisterEvent event) {
@@ -75,5 +90,10 @@ public final class FrontierEntities {
         event.register(BOAR.get(), SpawnPlacements.Type.ON_GROUND, heightmap, BoarEntity::canSpawn, operation);
         event.register(PROWLER.get(), SpawnPlacements.Type.ON_GROUND, heightmap, ProwlerEntity::canSpawn, operation);
         event.register(SKY_WRAITH.get(), SpawnPlacements.Type.NO_RESTRICTIONS, heightmap, SkyWraithEntity::canSpawn, operation);
+        event.register(TRAVELLER.get(), SpawnPlacements.Type.ON_GROUND, heightmap, TravellerEntity::canSpawn, operation);
+        event.register(TRADER.get(), SpawnPlacements.Type.ON_GROUND, heightmap,
+                (type, level, reason, pos, random) -> false, operation);
+        event.register(VILLAGE_GUARD.get(), SpawnPlacements.Type.ON_GROUND, heightmap,
+                (type, level, reason, pos, random) -> false, operation);
     }
 }

@@ -49,7 +49,8 @@ public record FrontierSpawnModifier(HolderSet<Biome> biomes, Kind kind) implemen
         RAIDER("raider", FrontierEntities.RAIDER, FrontierConfig.RAIDER_WEIGHT, 3, 5),
         BOAR("boar", FrontierEntities.BOAR, FrontierConfig.BOAR_WEIGHT, 2, 4),
         PROWLER("prowler", FrontierEntities.PROWLER, FrontierConfig.PROWLER_WEIGHT, 2, 3),
-        SKY_WRAITH("sky_wraith", FrontierEntities.SKY_WRAITH, FrontierConfig.SKY_WRAITH_WEIGHT, 1, 2);
+        SKY_WRAITH("sky_wraith", FrontierEntities.SKY_WRAITH, FrontierConfig.SKY_WRAITH_WEIGHT, 1, 2),
+        TRAVELLER("traveller", FrontierEntities.TRAVELLER, FrontierConfig.TRAVELLER_WEIGHT, 1, 2);
 
         private final String name;
         private final java.util.function.Supplier<? extends EntityType<? extends Mob>> type;

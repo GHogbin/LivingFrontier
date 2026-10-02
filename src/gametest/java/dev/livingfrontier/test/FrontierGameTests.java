@@ -66,7 +66,12 @@ public final class FrontierGameTests {
         var wraith = helper.spawn(FrontierEntities.SKY_WRAITH.get(), 6, 4, 5);
         helper.assertTrue(wraith.getMaxHealth() == 18 && wraith.isNoGravity() && !wraith.isDiving(), "Flying wraith starts idle");
         helper.assertTrue(!wraith.causeFallDamage(100, 1, wraith.damageSources().fall()), "Wraith fall immunity");
-        for (String name : List.of("deer", "songbird", "firefly", "raider", "warlord", "boar", "prowler", "sky_wraith")) {
+        var traveller = helper.spawn(FrontierEntities.TRAVELLER.get(), 2, 2, 6);
+        var guard = helper.spawn(FrontierEntities.VILLAGE_GUARD.get(), 4, 2, 6);
+        helper.assertTrue(traveller.getMaxHealth() == 20 && traveller.getTarget() == null, "Traveller starts peaceful");
+        helper.assertTrue(guard.getMaxHealth() == 32 && guard.getTarget() == null, "Guard starts neutral");
+        for (String name : List.of("deer", "songbird", "firefly", "raider", "warlord", "boar", "prowler", "sky_wraith",
+                "traveller", "trader", "village_guard")) {
             helper.assertTrue(BuiltInRegistries.ITEM.containsKey(FrontierEntities.id(name + "_spawn_egg")), name + " egg");
         }
         helper.succeed();
@@ -95,6 +100,10 @@ public final class FrontierGameTests {
                 entry -> entry.type == FrontierEntities.PROWLER.get() && entry.minCount == 2 && entry.maxCount == 3), "Prowler pack spawning");
         helper.assertTrue(forest.getMobs(MobCategory.MONSTER).unwrap().stream().anyMatch(
                 entry -> entry.type == FrontierEntities.SKY_WRAITH.get()), "Flying hostile biome spawning");
+        helper.assertTrue(forest.getMobs(MobCategory.CREATURE).unwrap().stream().anyMatch(
+                entry -> entry.type == FrontierEntities.TRAVELLER.get()), "Travellers added alongside vanilla animals");
+        helper.assertTrue(forest.getMobs(MobCategory.CREATURE).unwrap().stream().noneMatch(
+                entry -> entry.type == FrontierEntities.VILLAGE_GUARD.get()), "Village guards never multiply from natural spawning");
         helper.succeed();
     }
 
@@ -165,32 +174,37 @@ public final class FrontierGameTests {
         helper.succeed();
     }
 
-    @GameTest(template = "test/arena", timeoutTicks = 150)
+    @GameTest(template = "test/site_arena", timeoutTicks = 150)
     public static void guardedSitesAndBossPersistence(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         BlockPos campOrigin = helper.absolutePos(new BlockPos(1, 1, 1));
-        BlockPos keepOrigin = helper.absolutePos(new BlockPos(29, 1, 1));
+        BlockPos keepOrigin = helper.absolutePos(new BlockPos(43, 1, 1));
         place(helper, "raider_camp", campOrigin);
         place(helper, "ruined_keep", keepOrigin);
-        AABB campArea = new AABB(campOrigin).expandTowards(21, 9, 21);
-        AABB keepArea = new AABB(keepOrigin).expandTowards(29, 15, 29);
+        AABB campArea = new AABB(campOrigin).expandTowards(SiteLayouts.CAMP.size()[0], SiteLayouts.CAMP.size()[1], SiteLayouts.CAMP.size()[2]);
+        AABB keepArea = new AABB(keepOrigin).expandTowards(SiteLayouts.KEEP.size()[0], SiteLayouts.KEEP.size()[1], SiteLayouts.KEEP.size()[2]);
         List<RaiderEntity> campGuards = level.getEntitiesOfClass(RaiderEntity.class, campArea);
         List<RaiderEntity> keepGuards = level.getEntitiesOfClass(RaiderEntity.class, keepArea,
                 guard -> !(guard instanceof WarlordEntity));
         List<WarlordEntity> bosses = level.getEntitiesOfClass(WarlordEntity.class, keepArea);
-        helper.assertTrue(campGuards.size() == 4, "Four camp guards");
-        helper.assertTrue(keepGuards.size() == 6, "Six keep guards");
+        helper.assertTrue(campGuards.size() == SiteLayouts.CAMP.guards(), "Redesigned camp guard count");
+        helper.assertTrue(keepGuards.size() == SiteLayouts.KEEP.guards(), "Maze fortress guard count");
         helper.assertTrue(bosses.size() == 1, "Exactly one keep boss");
         helper.assertTrue(campGuards.stream().allMatch(guard -> guard.isGuard() && guard.isPersistenceRequired()), "Guards persist");
+        helper.assertTrue(campGuards.stream().filter(RaiderEntity::isArcher).count() == 2, "Camp has two tower archers and four melee guards");
+        helper.assertTrue(keepGuards.stream().filter(RaiderEntity::isArcher).count() == 3, "Fortress mixes three archers with six melee guards");
         WarlordEntity boss = bosses.get(0);
         helper.assertTrue(boss.getHealth() == 160 && boss.isGuard() && boss.isPersistenceRequired(), "Persistent boss");
+        helper.assertTrue(boss.isFrontierSealed() && boss.isNoAi(), "Fortress boss starts dormant behind the seals");
+        helper.assertTrue(!boss.isArcher(), "Warlord remains a melee boss");
         CompoundTag saved = new CompoundTag();
         boss.save(saved);
         Entity restored = EntityType.create(saved, level).orElseThrow();
         helper.assertTrue(restored instanceof WarlordEntity restoredBoss && restoredBoss.isGuard()
-                && restoredBoss.isPersistenceRequired() && restoredBoss.getHealth() == 160, "Boss save round trip");
-        chest(helper, campOrigin.offset(5, 2, 6), "raider_camp");
-        chest(helper, keepOrigin.offset(10, 1, 7), "ruined_keep");
+                && restoredBoss.isPersistenceRequired() && restoredBoss.getHealth() == 160
+                && restoredBoss.isFrontierSealed(), "Dormant boss save round trip");
+        chest(helper, SiteLayouts.at(campOrigin, SiteLayouts.CAMP.chests()[0]), "raider_camp");
+        chest(helper, SiteLayouts.at(keepOrigin, SiteLayouts.KEEP.chests()[0]), "ruined_keep");
         boss.hurt(boss.damageSources().genericKill(), 1000);
         helper.runAfterDelay(60, () -> {
             helper.assertTrue(level.getEntitiesOfClass(WarlordEntity.class, keepArea).stream().noneMatch(Entity::isAlive),

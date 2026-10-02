@@ -6,6 +6,8 @@ import dev.livingfrontier.encounter.EncounterDirector;
 import dev.livingfrontier.encounter.EncounterState;
 import com.mojang.authlib.GameProfile;
 import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -17,6 +19,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
 
@@ -51,8 +54,13 @@ public final class EncounterGameTests {
                 .getHolderOrThrow(net.minecraft.world.level.biome.Biomes.FOREST);
         int chunkX = sceneCenter.getX() >> 4;
         int chunkZ = sceneCenter.getZ() >> 4;
+        List<ChunkPos> fixtureTickets = new ArrayList<>();
         for (int x = chunkX - 4; x <= chunkX + 4; x++) {
             for (int z = chunkZ - 4; z <= chunkZ + 4; z++) {
+                if (!level.getForcedChunks().contains(ChunkPos.asLong(x, z))) {
+                    level.setChunkForced(x, z, true);
+                    fixtureTickets.add(new ChunkPos(x, z));
+                }
                 var chunk = level.getChunk(x, z);
                 chunk.fillBiomesFromNoise((qx, qy, qz, sampler) -> forest, level.getChunkSource().randomState().sampler());
             }
@@ -69,6 +77,7 @@ public final class EncounterGameTests {
         level.getServer().setDifficulty(Difficulty.NORMAL, true);
         level.setDayTime(6000);
         level.getGameRules().getRule(GameRules.RULE_DOMOBSPAWNING).set(true, level.getServer());
+        boolean waitingForCombat = false;
         try {
             helper.assertTrue(EncounterDirector.canStart(level, player), "Outdoor survival player is eligible: pos="
                     + player.blockPosition() + ", height=" + level.getHeight(
@@ -159,10 +168,15 @@ public final class EncounterGameTests {
                 } finally {
                     wraiths.forEach(Mob::discard);
                     target.discard();
+                    fixtureTickets.forEach(chunk -> level.setChunkForced(chunk.x, chunk.z, false));
                 }
             });
+            waitingForCombat = true;
             player.discard();
         } finally {
+            if (!waitingForCombat) {
+                fixtureTickets.forEach(chunk -> level.setChunkForced(chunk.x, chunk.z, false));
+            }
             level.setDayTime(previousTime);
             level.updateSkyBrightness();
             level.getServer().setDifficulty(previousDifficulty, true);

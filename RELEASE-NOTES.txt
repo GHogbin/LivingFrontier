@@ -1,25 +1,59 @@
-Living Frontier 0.2.0-beta.2 - Exploration Beta
+Living Frontier 0.2.0-beta.8 - Wilderness Trade Network Beta
 
 Requires Minecraft Java 1.20.1, Forge 47.4.0 and Java 17.
 No additional mod dependencies.
 
-Adds roaming wild boars, hostile forest prowler packs and flying sky
-wraiths with telegraphed diving attacks. Includes original animated
-models/textures, new spawn eggs, biome spawning and loot.
+Adds all four village design elements together: biome-specific materials,
+medieval defenses, rustic homes/farms, and a fantasy landmark/market square.
+Five original 41x41 fortified town centres cover the normal village biomes:
+  Plains: oak, white walls and a lantern bell tower.
+  Desert: sandstone courtyard homes and an oasis sun obelisk.
+  Savanna: acacia, terracotta and an amber wind spire.
+  Taiga: spruce, mossy stone and a forest rune shrine.
+  Snowy: warm timber homes, covered lit farms and a frost lantern beacon.
 
-Adds occasional hostile exploration encounters: daylight raider bands
-and nighttime prowler/wraith groups, with warnings, saved 6-12 minute
-cooldowns, movement requirements and configurable local/global caps.
-Protects Creative/Spectator players, villages, guarded bases, lit ground
-and unsuitable spawning locations. No forced chunk generation.
+Each core has four open road gateways, a defensive perimeter, two climbable
+watchtowers, two cottages/four beds, two irrigated farms, four canopy stalls,
+vanilla job sites, house loot and a meeting bell. The surrounding village
+continues using vanilla roads, homes, professions and normal trading.
+The wall protects the core, not every outer building; these are not raids
+or puzzle dungeons. Landmarks are decorative, not magic systems.
 
-Keeps all Beta 1 wildlife, guarded camps, ruined keeps and the Warlord.
-Corrects daylight raider spawning and permits forest-canopy patrols.
+Vanilla villagers, iron golems, cats and desert camels use their existing
+generation pools. The rare abandoned village variants keep their vanilla
+templates and original relative weights. No vanilla entity is replaced.
+Existing guards, wildlife, village errands, camp/keep puzzles and combat
+remain. Paved/snowy village grounds accept their guards, visitor and trader.
 
-Replace the Beta 1 JAR with this JAR and restart the Forge instance.
-Do not install both versions. Back up worlds before upgrading.
-Eight spawn eggs are available; new mobs can spawn in existing 1.20.1 saves.
+Beta 8 removes village-to-village road targeting completely. The world seed
+now creates independent wilderness crossroads with roads extending in up to
+four pseudo-random directions. Roads are three blocks wide, terrain graded,
+biome surfaced, structure aware and stop at ocean terrain.
 
-Beta limitations: hands-on client, multiplayer and balance playtesting
-remains necessary. Glowing mobs do not provide dynamic world lighting.
-Read START-HERE.txt for configuration, commands and installation details.
+Viable road cells place one small tent camp and one two-house roadside hamlet.
+Sites initialize peaceful residents once when reached. A persistent road
+trader shuttles between the pair without force-loading chunks.
+
+Every camp, hamlet and newly discovered inhabited village participates in a
+saved settlement economy. Traders unload imports, load local surpluses and
+carry an eight-slot physical inventory. Scarcity changes emerald prices.
+Right-click uses the vanilla merchant screen; player purchases and sales alter
+the trader's real cargo. Trade routes, inventories, stocks, import/export
+totals and site initialization survive saving and loading.
+
+Only NEWLY generated village starts use the redesign. Existing settlements,
+player buildings and saved vanilla structure templates are not rebuilt.
+Wilderness roads and roadside sites generate only in new Beta 8 chunks.
+Earlier road chunks and already-upgraded village populations are not
+retrofitted. No chunk-load replacement or forced regeneration.
+The separate older village-life resident/small-stall feature keeps working.
+
+Replace the previous JAR and restart both client/server as applicable.
+Back up saves. Explore new chunks or start a new world to see the designs.
+Do not install multiple versions or downgrade saves with puzzle blocks.
+Higher-priority datapacks/mods replacing the same vanilla town-centre pools
+can override these designs; the mod does not rewrite their data at runtime.
+
+Beta limitations: hands-on client/multiplayer/balance playtesting remains
+necessary. One centre layout per biome; outer buildings are still vanilla.
+Read START-HERE.txt for installation and gameplay details.

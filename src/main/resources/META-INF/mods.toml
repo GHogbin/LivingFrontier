@@ -7,7 +7,7 @@ modId="livingfrontier"
 version="${version}"
 displayName="Living Frontier"
 authors="GHogbin"
-description='''Wildlife, prowler packs, flying wraiths, guarded bases and occasional hostile wilderness encounters.'''
+description='''A lived-in world with wilderness trade roads, roadside settlements, cargo merchants, biome-themed villages, wildlife and puzzle-maze fortresses.'''
 
 [[dependencies.livingfrontier]]
 modId="forge"

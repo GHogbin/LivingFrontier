@@ -19,6 +19,9 @@ public final class FrontierItems {
     public static final RegistryObject<Item> BOAR_EGG = egg("boar", FrontierEntities.BOAR, 0x624435, 0xdbcba4);
     public static final RegistryObject<Item> PROWLER_EGG = egg("prowler", FrontierEntities.PROWLER, 0x282c32, 0xe7af43);
     public static final RegistryObject<Item> SKY_WRAITH_EGG = egg("sky_wraith", FrontierEntities.SKY_WRAITH, 0x34335f, 0x9bdbe6);
+    public static final RegistryObject<Item> TRAVELLER_EGG = egg("traveller", FrontierEntities.TRAVELLER, 0x805b44, 0x76ac8d);
+    public static final RegistryObject<Item> TRADER_EGG = egg("trader", FrontierEntities.TRADER, 0x6b442e, 0xd4b45f);
+    public static final RegistryObject<Item> VILLAGE_GUARD_EGG = egg("village_guard", FrontierEntities.VILLAGE_GUARD, 0x9babb3, 0x456686);
 
     private FrontierItems() {
     }
@@ -30,7 +33,7 @@ public final class FrontierItems {
 
     public static void creativeTabs(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey().equals(CreativeModeTabs.SPAWN_EGGS)) {
-            ITEMS.getEntries().forEach(event::accept);
+            ITEMS.getEntries().stream().filter(item -> item.get() instanceof ForgeSpawnEggItem).forEach(event::accept);
         }
     }
 }
